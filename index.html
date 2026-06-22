@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bac Libre — Sciences Physiques</title>
+<style>
+  :root{
+    --bg: #f4f6f9;
+    --bg-soft: #ffffff;
+    --ink: #2a3142;
+    --ink-soft: #6b7385;
+    --line: #e3e7ee;
+    --slate: #5b7c99;
+    --slate-deep: #3f5b73;
+    --amber: #d99a4e;
+    --amber-soft: #f3e3c8;
+    --green: #6f9b6f;
+    --red: #c97a6b;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(40,50,70,.04), 0 6px 20px rgba(40,50,70,.06);
+    font-family: 'Söhne', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-size:15px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-thumb{background:#d3d9e3; border-radius:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+
+  a{color:var(--slate-deep); text-decoration:none;}
+
+  button{
+    font-family:inherit; cursor:pointer; border:none; background:none;
+  }
+  input, select, textarea{
+    font-family:inherit; font-size:14px; border:1px solid var(--line);
+    border-radius:8px; padding:8px 10px; background:#fff; color:var(--ink);
+    outline:none; transition:border-color .15s;
+  }
+  input:focus, select:focus, textarea:focus{border-color:var(--slate);}
+
+  /* ===== Layout ===== */
+  #app{display:flex; min-height:100vh;}
+
+  /* ----- Sidebar ----- */
+  #sidebar{
+    width:230px; flex-shrink:0; background:var(--bg-soft);
+    border-right:1px solid var(--line);
+    display:flex; flex-direction:column; padding:20px 14px;
+    position:sticky; top:0; height:100vh;
+  }
+  .brand{
+    display:flex; align-items:center; gap:10px; padding:4px 8px 18px 8px;
+  }
+  .brand-mark{
+    width:34px; height:34px; border-radius:10px;
+    background:linear-gradient(135deg,var(--slate),var(--slate-deep));
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-weight:700; font-size:15px; flex-shrink:0;
+  }
+  .brand-text{display:flex; flex-direction:column; line-height:1.2;}
+  .brand-text strong{font-size:14px; letter-spacing:.2px;}
+  .brand-text span{font-size:11px; color:var(--ink-soft);}
+
+  nav.navlist{display:flex; flex-direction:column; gap:2px; margin-top:6px;}
+  .navbtn{
+    display:flex; align-items:center; gap:10px;
+    padding:9px 10px; border-radius:9px; font-size:13.5px;
+    color:var(--ink-soft); font-weight:500; text-align:left; width:100%;
+  }
+  .navbtn .ic{width:18px; text-align:center; opacity:.8; font-size:14px;}
+  .navbtn:hover{background:#f0f3f7; color:var(--ink);}
+  .navbtn.active{background:var(--slate); color:#fff;}
+  .navbtn.active .ic{opacity:1;}
+
+  .sidebar-divider{height:1px; background:var(--line); margin:14px 4px;}
+
+  #sidebar-progress{
+    margin-top:auto; padding:14px 10px; border-radius:12px;
+    background:#f7f9fb; border:1px solid var(--line);
+  }
+  #sidebar-progress .label{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;}
+  #sidebar-progress .pct{font-size:24px; font-weight:700; color:var(--slate-deep);}
+  .miniBar{height:6px; border-radius:6px; background:#e7eaf0; margin-top:8px; overflow:hidden;}
+  .miniBar > div{height:100%; background:linear-gradient(90deg,var(--slate),var(--amber)); border-radius:6px; transition:width .4s;}
+
+  /* ----- Main content ----- */
+  #main{flex:1; min-width:0; display:flex; flex-direction:column;}
+  #topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px; border-bottom:1px solid var(--line); background:var(--bg-soft);
+    gap:20px; flex-wrap:wrap;
+  }
+  #topbar h1{font-size:18px; font-weight:650;}
+  #topbar .sub{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
+
+  #countdown{
+    display:flex; align-items:center; gap:14px;
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:8px 16px; box-shadow:var(--shadow);
+  }
+  .cd-unit{display:flex; flex-direction:column; align-items:center; min-width:42px;}
+  .cd-unit b{font-size:19px; font-weight:700; color:var(--slate-deep); line-height:1;}
+  .cd-unit span{font-size:9.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.4px; margin-top:2px;}
+  .cd-sep{color:var(--line); font-size:14px;}
+  #countdown .editdate{font-size:11px; color:var(--ink-soft); cursor:pointer; margin-left:6px; text-decoration:underline; text-decoration-color:var(--line);}
+
+  #content{flex:1; padding:26px 28px 60px; overflow-y:auto;}
+  .view{display:none;}
+  .view.active{display:block; animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ----- Dashboard cards ----- */
+  .grid-stats{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;
+  }
+  .stat-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; box-shadow:var(--shadow);
+  }
+  .stat-card .num{font-size:26px; font-weight:700; color:var(--slate-deep);}
+  .stat-card .lbl{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+
+  .section-title{
+    font-size:13px; font-weight:650; text-transform:uppercase; letter-spacing:.6px;
+    color:var(--ink-soft); margin:28px 0 12px;
+  }
+  .section-title:first-child{margin-top:0;}
+
+  .module-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px;}
+  .module-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px; cursor:pointer; box-shadow:var(--shadow);
+    transition:transform .15s, box-shadow .15s; position:relative; overflow:hidden;
+  }
+  .module-card:hover{transform:translateY(-2px); box-shadow:0 4px 16px rgba(40,50,70,.1);}
+  .module-card .top-row{display:flex; align-items:center; justify-content:space-between;}
+  .module-card .icon-badge{
+    width:38px; height:38px; border-radius:10px; display:flex; align-items:center;
+    justify-content:center; font-weight:700; font-size:15px; color:#fff; flex-shrink:0;
+  }
+  .module-card .coef-tag{font-size:11px; color:var(--ink-soft); background:#f1f3f7; border-radius:6px; padding:3px 8px; font-weight:600;}
+  .module-card h3{font-size:15.5px; font-weight:650; margin-top:12px;}
+  .module-card .meta{font-size:12px; color:var(--ink-soft); margin-top:2px;}
+  .module-card .pctline{display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:12px; color:var(--ink-soft);}
+  .module-card .pctline b{color:var(--ink); font-size:13px;}
+  .module-card .bar{height:7px; border-radius:7px; background:#eef0f4; margin-top:8px; overflow:hidden;}
+  .module-card .bar > div{height:100%; border-radius:7px; transition:width .4s;}
+
+  /* ----- Module detail view ----- */
+  .module-header{
+    display:flex; align-items:center; gap:16px; margin-bottom:20px; flex-wrap:wrap;
+  }
+  .module-header .icon-badge-lg{
+    width:52px; height:52px; border-radius:14px; display:flex; align-items:center;
+    justify-content:center; font-weight:700; font-size:20px; color:#fff;
+  }
+  .module-header h2{font-size:22px; font-weight:700;}
+  .module-header .meta-line{font-size:13px; color:var(--ink-soft); margin-top:3px;}
+  .back-link{font-size:13px; color:var(--ink-soft); margin-bottom:14px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;}
+  .back-link:hover{color:var(--ink);}
+
+  .chapter-card{
+    background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:16px 18px; margin-bottom:10px; transition:border-color .15s;
+  }
+  .chapter-card.done{border-color:#cfe0cf; background:#fafdf9;}
+  .chapter-top{display:flex; align-items:flex-start; gap:12px;}
+  .chk{
+    width:22px; height:22px; border-radius:7px; border:2px solid var(--line);
+    flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; transition:all .15s; margin-top:1px;
+  }
+  .chk.checked{background:var(--green); border-color:var(--green); color:#fff;}
+  .chapter-title{flex:1; font-size:14.5px; font-weight:600; line-height:1.4;}
+  .chapter-title.done{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:#c9d6c9;}
+  .chapter-num{font-size:11.5px; color:var(--ink-soft); font-weight:600; margin-right:4px;}
+  .expand-btn{font-size:12px; color:var(--ink-soft); cursor:pointer; padding:4px 8px; border-radius:6px;}
+  .expand-btn:hover{background:#f1f3f7;}
+
+  .chapter-body{display:none; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);}
+  .chapter-body.open{display:block;}
+
+  .res-row{display:flex; gap:8px; margin-bottom:8px; align-items:center;}
+  .res-row input{flex:1;}
+  .res-row select{width:110px; flex-shrink:0;}
+  .res-list{display:flex; flex-direction:column; gap:6px; margin-top:6px;}
+  .res-item{
+    display:flex; align-items:center; gap:8px; padding:7px 10px;
+    background:#f7f9fb; border-radius:8px; font-size:13px;
+  }
+  .res-item .res-ic{width:16px; flex-shrink:0; text-align:center; opacity:.7;}
+  .res-item a{flex:1; color:var(--ink); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .res-item a:hover{color:var(--slate-deep); text-decoration:underline;}
+  .res-item .rm{color:#c9a9a9; font-size:14px; flex-shrink:0; cursor:pointer; padding:2px 5px;}
+  .res-item .rm:hover{color:var(--red);}
+  .res-item .tag{font-size:10px; padding:2px 6px; border-radius:5px; font-weight:700; text-transform:uppercase; flex-shrink:0;}
+  .tag-pdf{background:#fde3df; color:#a4503f;}
+  .tag-video{background:#e0e9f5; color:#3f5b73;}
+  .tag-playlist{background:#ece0f5; color:#6b3f8a;}
+  .tag-link{background:#e3eee3; color:#3f6b3f;}
+
+  .add-btn{
+    font-size:12.5px; color:var(--slate-deep); font-weight:600; cursor:pointer;
+    padding:6px 10px; border-radius:7px; border:1px dashed var(--slate); display:inline-flex; align-items:center; gap:5px;
+  }
+  .add-btn:hover{background:#eef3f7;}
+
+  .notes-box{margin-top:10px;}
+  .notes-box textarea{width:100%; min-height:60px; resize:vertical; font-size:13px;}
+
+  /* ----- AI Chat ----- */
+  #chatPanel{display:flex; flex-direction:column; height:calc(100vh - 0px);}
+  #chatHeader{padding:18px 22px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;}
+  #chatMessages{flex:1; overflow-y:auto; padding:20px 22px; display:flex; flex-direction:column; gap:14px;}
+  .msg{max-width:78%; padding:11px 14px; border-radius:14px; font-size:14px; line-height:1.5; white-space:pre-wrap;}
+  .msg.user{align-self:flex-end; background:var(--slate); color:#fff; border-bottom-right-radius:4px;}
+  .msg.ai{align-self:flex-start; background:#fff; border:1px solid var(--line); border-bottom-left-radius:4px;}
+  .msg.sys{align-self:center; font-size:12px; color:var(--ink-soft); background:none;}
+  #chatInputBar{padding:16px 22px; border-top:1px solid var(--line); display:flex; gap:10px;}
+  #chatInputBar textarea{flex:1; resize:none; min-height:42px; max-height:140px; font-size:14px;}
+  #chatInputBar button{background:var(--slate); color:#fff; padding:0 18px; border-radius:9px; font-weight:600; font-size:13.5px;}
+  #chatInputBar button:disabled{opacity:.5; cursor:default;}
+
+  .gemini-setup{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:22px; max-width:520px; margin:30px auto; box-shadow:var(--shadow);
+  }
+  .gemini-setup h3{font-size:16px; margin-bottom:8px;}
+  .gemini-setup p{font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;}
+  .gemini-setup input{width:100%; margin-bottom:10px;}
+  .gemini-setup .save-btn{background:var(--slate); color:#fff; padding:9px 16px; border-radius:8px; font-size:13.5px; font-weight:600;}
+  .gemini-setup .hint{font-size:11.5px; color:var(--ink-soft); margin-top:10px;}
+  .gemini-setup a{text-decoration:underline;}
+
+  /* ----- Resources / Drive view ----- */
+  .drive-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px; box-shadow:var(--shadow); margin-bottom:18px;
+  }
+  .drive-card h3{font-size:15px; margin-bottom:10px;}
+  .drive-card p{font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:14px;}
+  .drive-link-row{display:flex; gap:10px;}
+  .drive-link-row input{flex:1;}
+  .drive-btn{background:var(--amber); color:#5b3d18; padding:10px 18px; border-radius:9px; font-weight:650; font-size:13.5px; white-space:nowrap;}
+  .drive-btn.secondary{background:#eef0f4; color:var(--ink);}
+  .saved-drive-link{
+    display:flex; align-items:center; gap:10px; margin-top:12px; padding:12px 14px;
+    background:#fbf6ec; border:1px solid var(--amber-soft); border-radius:10px; font-size:13.5px;
+  }
+  .saved-drive-link a{font-weight:650; color:var(--slate-deep);}
+
+  .queue-item{
+    display:flex; align-items:center; gap:10px; padding:10px 12px; background:#f7f9fb;
+    border-radius:9px; margin-bottom:8px; font-size:13px;
+  }
+  .queue-item a{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .queue-item .open-btn{background:var(--slate); color:#fff; padding:5px 12px; border-radius:7px; font-size:12px; font-weight:600; flex-shrink:0;}
+  .queue-item .rm{color:#c9a9a9; cursor:pointer; flex-shrink:0; padding:2px 6px;}
+
+  /* ----- Toast ----- */
+  #toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
+    background:#2a3142; color:#fff; padding:10px 18px; border-radius:10px; font-size:13px;
+    opacity:0; transition:all .25s; pointer-events:none; z-index:999;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  .empty-state{text-align:center; padding:50px 20px; color:var(--ink-soft);}
+  .empty-state .big{font-size:38px; margin-bottom:10px;}
+
+  @media (max-width:880px){
+    #sidebar{position:fixed; left:-240px; z-index:50; transition:left .2s; box-shadow:4px 0 20px rgba(0,0,0,.1);}
+    #sidebar.open{left:0;}
+    .grid-stats{grid-template-columns:repeat(2,1fr);}
+    #topbar{padding:14px 16px;}
+    #content{padding:18px 16px 50px;}
+    #menuToggle{display:flex !important;}
+  }
+  #menuToggle{display:none; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; background:#fff; border:1px solid var(--line); font-size:16px;}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">BL</div>
+      <div class="brand-text">
+        <strong>Bac Libre</strong>
+        <span>Sciences Physiques</span>
+      </div>
+    </div>
+
+    <nav class="navlist">
+      <button class="navbtn active" data-view="dashboard"><span class="ic">⌂</span> Tableau de bord</button>
+      <button class="navbtn" data-view="modules"><span class="ic">▤</span> Modules &amp; matières</button>
+      <button class="navbtn" data-view="ai"><span class="ic">✦</span> Assistant IA</button>
+      <button class="navbtn" data-view="drive"><span class="ic">⌘</span> Drive &amp; ressources</button>
+      <button class="navbtn" data-view="settings"><span class="ic">⚙</span> Réglages</button>
+    </nav>
+
+    <div class="sidebar-divider"></div>
+
+    <div id="sidebar-progress">
+      <div class="label">Progression globale</div>
+      <div class="pct" id="sidebarPct">0%</div>
+      <div class="miniBar"><div id="sidebarBar" style="width:0%"></div></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div id="topbar">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <button id="menuToggle">☰</button>
+        <div>
+          <h1 id="pageTitle">Tableau de bord</h1>
+          <div class="sub" id="pageSub">Vue d'ensemble de ta préparation</div>
+        </div>
+      </div>
+      <div id="countdown"></div>
+    </div>
+
+    <div id="content">
+      <!-- DASHBOARD VIEW -->
+      <section class="view active" id="view-dashboard"></section>
+      <!-- MODULES VIEW -->
+      <section class="view" id="view-modules"></section>
+      <!-- MODULE DETAIL VIEW -->
+      <section class="view" id="view-detail"></section>
+      <!-- AI VIEW -->
+      <section class="view" id="view-ai"></section>
+      <!-- DRIVE VIEW -->
+      <section class="view" id="view-drive"></section>
+      <!-- SETTINGS VIEW -->
+      <section class="view" id="view-settings"></section>
+    </div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===================== DONNÉES DU PROGRAMME =====================
+// Filière: Sciences Physiques (PC) — Bac Libre Maroc — Examen National 2BAC
+// Coefficients officiels + chapitres réels du programme marocain
+
+const CURRICULUM = [
+  // ============== EXAMEN NATIONAL (2ème Bac) ==============
+  {
+    id: "math",
+    name: "Mathématiques",
+    block: "national",
+    color: "#5b7c99",
+    coef: 7,
+    duration: "3h",
+    icon: "∑",
+    chapters: [
+      "Limites et continuité",
+      "Dérivation et étude des fonctions",
+      "Suites numériques",
+      "Fonctions logarithmiques",
+      "Fonctions exponentielles",
+      "Nombres complexes (partie 1)",
+      "Nombres complexes (partie 2)",
+      "Calcul intégral",
+      "Équations différentielles",
+      "Dénombrement",
+      "Probabilités",
+      "Structures algébriques",
+      "Arithmétique dans ℤ",
+      "Produit scalaire dans l'espace",
+      "Produit vectoriel",
+      "Géométrie dans l'espace (droites, plans, sphères)"
+    ]
+  },
+  {
+    id: "pc",
+    name: "Physique - Chimie",
+    block: "national",
+    color: "#c98a4b",
+    coef: 7,
+    duration: "3h",
+    icon: "⚛",
+    chapters: [
+      // Physique
+      "Ondes mécaniques progressives",
+      "Ondes mécaniques progressives périodiques",
+      "Propagation d'une onde lumineuse",
+      "Transmission de l'information (modulation, antenne)",
+      "Décroissance radioactive",
+      "Noyaux, masse et énergie",
+      "Dipôle RC",
+      "Dipôle RL",
+      "Oscillations libres dans un circuit RLC série",
+      "Circuit RLC en régime forcé (oscillations forcées)",
+      "Étude énergétique des systèmes oscillants",
+      "Lois de Newton et applications",
+      "Chute verticale d'un solide",
+      "Mouvement des satellites et des planètes",
+      "Mouvement d'une particule chargée dans un champ électrique",
+      "Mouvement d'une particule chargée dans un champ magnétique",
+      // Chimie
+      "Suivi temporel d'une transformation chimique",
+      "Transformations lentes et rapides",
+      "Évolution d'un système chimique (sens spontané)",
+      "État d'équilibre d'un système chimique",
+      "Transformations associées aux réactions acide-base",
+      "Dosages acido-basiques",
+      "Contrôle de l'évolution des systèmes chimiques",
+      "Piles et transformations spontanées",
+      "Transformations forcées (électrolyse)",
+      "Évolution d'un système chimique vers un état final (oxydoréduction)",
+      "Les solutions colorées",
+      "Estérification et hydrolyse",
+      "Contrôle de l'évolution d'un système (estérification)"
+    ]
+  },
+  {
+    id: "svt",
+    name: "Sciences de la Vie et de la Terre",
+    block: "national",
+    color: "#6f9b6f",
+    coef: 5,
+    duration: "1h30",
+    icon: "🧬",
+    chapters: [
+      "Réactions libérant l'énergie potentielle de la matière organique (niveau cellulaire)",
+      "Rôle du muscle squelettique dans la conversion d'énergie",
+      "Nature chimique du message héréditaire",
+      "Expression du message héréditaire",
+      "Lois statistiques de transmission des caractères héréditaires (diploïdes)",
+      "Génétique humaine et génétique des populations",
+      "Immunologie : soi et non-soi",
+      "Moyens de défense de l'organisme",
+      "Gestion des ressources en eau",
+      "Amélioration de la production agricole",
+      "Utilisation des matières organiques et minérales",
+      "Déchets ménagers : composants et gestion",
+      "Phénomènes géologiques liés à la formation des chaînes de montagnes",
+      "Tectonique des plaques"
+    ]
+  },
+  {
+    id: "philo",
+    name: "Philosophie",
+    block: "national",
+    color: "#9b7b9b",
+    coef: 2,
+    duration: "2h",
+    icon: "🦉",
+    chapters: [
+      "La personne (identité, valeur, liberté/nécessité)",
+      "Autrui (existence et connaissance d'autrui, la relation à autrui)",
+      "La théorie et l'expérience (expérience/expérimentation, rationalité scientifique)",
+      "La vérité (opinion et vérité, critères de la vérité, la vérité comme valeur)",
+      "L'État (légitimité et fins de l'État, nature du pouvoir politique, État entre droit et violence)",
+      "Le droit et la justice (droit naturel/positif, justice fondement du droit, égalité/équité)",
+      "Le devoir (devoir et contrainte, conscience morale, devoir et société)",
+      "La liberté (liberté et déterminisme, liberté et volonté, liberté et loi)"
+    ]
+  },
+  {
+    id: "ang",
+    name: "Anglais",
+    block: "national",
+    color: "#5c8a8a",
+    coef: 2,
+    duration: "2h",
+    icon: "En",
+    chapters: [
+      "Reading comprehension techniques",
+      "Grammar review — tenses & structures",
+      "Vocabulary building",
+      "Essay & paragraph writing",
+      "Functions of language (requests, suggestions, etc.)"
+    ]
+  },
+
+  // ============== EXAMEN RÉGIONAL (1ère Bac — matières secondaires du Bac Libre) ==============
+  {
+    id: "fr",
+    name: "Français",
+    block: "regional",
+    color: "#b85c5c",
+    coef: 4,
+    duration: "2h",
+    icon: "Fr",
+    chapters: [
+      "Candide ou l'Optimisme — étude intégrale",
+      "Il était une fois un couple heureux — étude intégrale",
+      "Le Père Goriot — étude intégrale",
+      "Vocabulaire et expressions clés",
+      "Techniques de l'argumentation",
+      "Méthodologie du commentaire de texte",
+      "Méthodologie de l'essai / production écrite"
+    ]
+  },
+  {
+    id: "arabe",
+    name: "Langue Arabe",
+    block: "regional",
+    color: "#7a8a5c",
+    coef: 2,
+    duration: "2h",
+    icon: "ع",
+    chapters: [
+      "النصوص الشعرية — العصر الحديث",
+      "النصوص النثرية — العصر الحديث",
+      "القواعد النحوية والصرفية",
+      "البلاغة وأساليب التعبير",
+      "منهجية تحليل النص الأدبي",
+      "منهجية كتابة الإنشاء"
+    ]
+  },
+  {
+    id: "islamique",
+    name: "Éducation Islamique",
+    block: "regional",
+    color: "#8a7a5c",
+    coef: 2,
+    duration: "1h30",
+    icon: "☾",
+    chapters: [
+      "القرآن الكريم — أحكام التجويد والحفظ",
+      "الحديث الشريف وعلومه",
+      "العقيدة الإسلامية",
+      "الفقه — العبادات والمعاملات",
+      "السيرة النبوية والقيم الإسلامية",
+      "قضايا فكرية ومعاصرة"
+    ]
+  },
+  {
+    id: "histgeo",
+    name: "Histoire-Géographie",
+    block: "regional",
+    color: "#5c7a8a",
+    coef: 2,
+    duration: "2h",
+    icon: "🌍",
+    chapters: [
+      // Histoire (1ère Bac)
+      "Les transformations économiques, financières, sociales et intellectuelles du 19ème siècle",
+      "La situation de l'Empire ottoman et les convoitises européennes",
+      "La situation du Maroc avant le protectorat",
+      "La Première Guerre mondiale",
+      "La crise de 1929 et ses répercussions",
+      "La Seconde Guerre mondiale",
+      "Le Maroc sous le protectorat — résistance et mouvement national",
+      "La Guerre froide — origines et manifestations",
+      // Géographie (1ère Bac)
+      "La répartition de la population dans le monde",
+      "L'urbanisation dans le monde",
+      "Les ressources naturelles et leur exploitation",
+      "Les espaces agricoles dans le monde",
+      "La mondialisation et ses effets",
+      "Les firmes multinationales et les échanges internationaux",
+      "Le Maroc — population et urbanisation",
+      "Le Maroc — agriculture et stratégies de développement"
+    ]
+  },
+  {
+    id: "traduction",
+    name: "Traduction",
+    block: "regional",
+    color: "#8a5c7a",
+    coef: 2,
+    duration: "1h30",
+    icon: "⇄",
+    chapters: [
+      "Traduction arabe → français : textes de presse",
+      "Traduction français → arabe : textes de presse",
+      "Traduction arabe → français : textes littéraires",
+      "Traduction français → arabe : textes littéraires",
+      "Vocabulaire thématique bilingue",
+      "Techniques et méthodologie de la traduction"
+    ]
+  }
+];
+
+// Coefficient total pour info
+const TOTAL_COEF = CURRICULUM.reduce((s, m) => s + m.coef, 0);
+const NATIONAL_COEF = CURRICULUM.filter(m => m.block === "national").reduce((s,m)=>s+m.coef,0);
+const REGIONAL_COEF = CURRICULUM.filter(m => m.block === "regional").reduce((s,m)=>s+m.coef,0);
+
+</script>
+<script>
+// ===================== ÉTAT & PERSISTANCE =====================
+const STORAGE_KEY = "bacprep_state_v1";
+
+const DEFAULT_STATE = {
+  examDate: "2027-06-03",
+  geminiKey: "",
+  driveLink: "",
+  chapters: {},     // chapterKey -> { done: bool, resources: [{type,label,url}], notes: "" }
+  downloadQueue: [], // [{url, name, addedAt}]
+  chatHistory: []
+};
+
+let STATE = structuredClone(DEFAULT_STATE);
+
+function chapterKey(moduleId, idx){ return moduleId + "::" + idx; }
+
+function getChapterData(moduleId, idx){
+  const key = chapterKey(moduleId, idx);
+  if(!STATE.chapters[key]){
+    STATE.chapters[key] = { done:false, resources:[], notes:"" };
+  }
+  return STATE.chapters[key];
+}
+
+function saveState(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
+  }catch(e){ console.warn("save failed", e); }
+}
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      STATE = Object.assign(structuredClone(DEFAULT_STATE), parsed);
+    }
+  }catch(e){
+    // no saved data yet — keep defaults
+  }
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=> t.classList.remove("show"), 2200);
+}
+
+// ===================== PROGRESS CALCULATION =====================
+function moduleProgress(mod){
+  const total = mod.chapters.length;
+  let done = 0;
+  mod.chapters.forEach((_, idx) => {
+    if(getChapterData(mod.id, idx).done) done++;
+  });
+  return { done, total, pct: total ? Math.round((done/total)*100) : 0 };
+}
+
+function globalProgress(){
+  let totalChapters = 0, doneChapters = 0;
+  let weightedDone = 0, weightedTotal = 0;
+  CURRICULUM.forEach(mod => {
+    const p = moduleProgress(mod);
+    totalChapters += p.total;
+    doneChapters += p.done;
+    weightedTotal += mod.coef;
+    weightedDone += mod.coef * (p.total ? p.done/p.total : 0);
+  });
+  return {
+    totalChapters, doneChapters,
+    pct: totalChapters ? Math.round((doneChapters/totalChapters)*100) : 0,
+    weightedPct: weightedTotal ? Math.round((weightedDone/weightedTotal)*100) : 0
+  };
+}
+
+function countResources(){
+  let n = 0;
+  Object.values(STATE.chapters).forEach(c => n += (c.resources||[]).length);
+  return n;
+}
+
+// ===================== COUNTDOWN =====================
+function renderCountdown(){
+  const el = document.getElementById("countdown");
+  const target = new Date(STATE.examDate + "T08:00:00");
+  const now = new Date();
+  let diff = target - now;
+  let label = "Jour J 🎓";
+  if(diff < 0){
+    el.innerHTML = `<div class="cd-unit"><b>—</b><span>Examen passé</span></div>`;
+    return;
+  }
+  const totalDays = Math.floor(diff / 86400000);
+  const months = Math.floor(totalDays / 30.44);
+  const days = totalDays - Math.floor(months * 30.44);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+
+  el.innerHTML = `
+    <div class="cd-unit"><b>${months}</b><span>mois</span></div>
+    <div class="cd-sep">·</div>
+    <div class="cd-unit"><b>${days}</b><span>jours</span></div>
+    <div class="cd-sep">·</div>
+    <div class="cd-unit"><b>${hours}</b><span>heures</span></div>
+    <span class="editdate" onclick="goView('settings')">modifier</span>
+  `;
+}
+
+// ===================== NAVIGATION =====================
+let currentDetailModule = null;
+
+function goView(name){
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-" + name).classList.add("active");
+  document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+  const btn = document.querySelector(`.navbtn[data-view="${name}"]`);
+  if(btn) btn.classList.add("active");
+
+  const titles = {
+    dashboard: ["Tableau de bord", "Vue d'ensemble de ta préparation"],
+    modules: ["Modules & matières", "Toutes les matières de l'examen national"],
+    ai: ["Assistant IA", "Discute autant que tu veux, sans limite"],
+    drive: ["Drive & ressources", "Centralise tes fichiers et liens"],
+    settings: ["Réglages", "Personnalise ta plateforme"]
+  };
+  if(titles[name]){
+    document.getElementById("pageTitle").textContent = titles[name][0];
+    document.getElementById("pageSub").textContent = titles[name][1];
+  }
+  document.getElementById("sidebar").classList.remove("open");
+
+  if(name === "dashboard") renderDashboard();
+  if(name === "modules") renderModules();
+  if(name === "ai") renderAI();
+  if(name === "drive") renderDrive();
+  if(name === "settings") renderSettings();
+}
+
+function openModuleDetail(modId){
+  currentDetailModule = modId;
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-detail").classList.add("active");
+  document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+  document.querySelector('.navbtn[data-view="modules"]').classList.add("active");
+  const mod = CURRICULUM.find(m => m.id === modId);
+  document.getElementById("pageTitle").textContent = mod.name;
+  document.getElementById("pageSub").textContent = `Coefficient ${mod.coef} · Durée d'épreuve ${mod.duration}`;
+  renderModuleDetail(modId);
+}
+
+// ===================== RENDER: DASHBOARD =====================
+function renderDashboard(){
+  const g = globalProgress();
+  const resCount = countResources();
+  const el = document.getElementById("view-dashboard");
+
+  function cardHTML(mod){
+    const p = moduleProgress(mod);
+    return `
+      <div class="module-card" onclick="openModuleDetail('${mod.id}')">
+        <div class="top-row">
+          <div class="icon-badge" style="background:${mod.color}">${mod.icon}</div>
+          <div class="coef-tag">Coef ${mod.coef}</div>
+        </div>
+        <h3>${mod.name}</h3>
+        <div class="meta">${mod.chapters.length} chapitres · ${mod.duration}</div>
+        <div class="pctline"><span>Progression</span><b>${p.pct}%</b></div>
+        <div class="bar"><div style="width:${p.pct}%; background:${mod.color}"></div></div>
+      </div>
+    `;
+  }
+
+  const nationalMods = CURRICULUM.filter(m => m.block === "national");
+  const regionalMods = CURRICULUM.filter(m => m.block === "regional");
+
+  el.innerHTML = `
+    <div class="grid-stats">
+      <div class="stat-card">
+        <div class="num">${g.pct}%</div>
+        <div class="lbl">Chapitres terminés (${g.doneChapters}/${g.totalChapters})</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">${g.weightedPct}%</div>
+        <div class="lbl">Progression pondérée (coef.)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">${resCount}</div>
+        <div class="lbl">Ressources liées (PDF, vidéos…)</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">${CURRICULUM.length}</div>
+        <div class="lbl">Matières au programme</div>
+      </div>
+    </div>
+
+    <div class="section-title">Examen national — 2ème Bac (coef. total ${NATIONAL_COEF})</div>
+    <div class="module-grid">${nationalMods.map(cardHTML).join("")}</div>
+
+    <div class="section-title">Examen régional — matières 1ère Bac (coef. total ${REGIONAL_COEF})</div>
+    <div class="module-grid">${regionalMods.map(cardHTML).join("")}</div>
+  `;
+}
+
+// ===================== RENDER: MODULES LIST =====================
+function renderModules(){
+  const el = document.getElementById("view-modules");
+  function cardHTML(mod){
+    const p = moduleProgress(mod);
+    return `
+      <div class="module-card" onclick="openModuleDetail('${mod.id}')">
+        <div class="top-row">
+          <div class="icon-badge" style="background:${mod.color}">${mod.icon}</div>
+          <div class="coef-tag">Coef ${mod.coef}</div>
+        </div>
+        <h3>${mod.name}</h3>
+        <div class="meta">${mod.chapters.length} chapitres · ${mod.duration}</div>
+        <div class="pctline"><span>${p.done}/${p.total} chapitres</span><b>${p.pct}%</b></div>
+        <div class="bar"><div style="width:${p.pct}%; background:${mod.color}"></div></div>
+      </div>
+    `;
+  }
+  const nationalMods = CURRICULUM.filter(m => m.block === "national");
+  const regionalMods = CURRICULUM.filter(m => m.block === "regional");
+  el.innerHTML = `
+    <div class="section-title">Examen national — 2ème Bac</div>
+    <div class="module-grid">${nationalMods.map(cardHTML).join("")}</div>
+    <div class="section-title">Examen régional — matières 1ère Bac</div>
+    <div class="module-grid">${regionalMods.map(cardHTML).join("")}</div>
+  `;
+}
+
+// ===================== RENDER: MODULE DETAIL =====================
+function renderModuleDetail(modId){
+  const mod = CURRICULUM.find(m => m.id === modId);
+  const p = moduleProgress(mod);
+  const el = document.getElementById("view-detail");
+
+  let chaptersHTML = mod.chapters.map((title, idx) => {
+    const data = getChapterData(modId, idx);
+    const resHTML = (data.resources||[]).map((r, ri) => {
+      const tagClass = {pdf:"tag-pdf", video:"tag-video", playlist:"tag-playlist", link:"tag-link"}[r.type] || "tag-link";
+      const icon = {pdf:"📄", video:"▶", playlist:"▶▶", link:"🔗"}[r.type] || "🔗";
+      return `
+        <div class="res-item">
+          <span class="res-ic">${icon}</span>
+          <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.label || r.url)}</a>
+          <span class="tag ${tagClass}">${r.type}</span>
+          <span class="rm" onclick="removeResource('${modId}',${idx},${ri})">✕</span>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="chapter-card ${data.done ? 'done' : ''}" id="chap-${modId}-${idx}">
+        <div class="chapter-top">
+          <div class="chk ${data.done ? 'checked' : ''}" onclick="toggleChapter('${modId}',${idx})">${data.done ? '✓' : ''}</div>
+          <div class="chapter-title ${data.done ? 'done' : ''}">
+            <span class="chapter-num">${idx+1}.</span>${escapeHtml(title)}
+          </div>
+          <div class="expand-btn" onclick="toggleExpand('${modId}',${idx})" id="expbtn-${modId}-${idx}">+ ressources</div>
+        </div>
+        <div class="chapter-body" id="chapbody-${modId}-${idx}">
+          <div class="res-row">
+            <select id="restype-${modId}-${idx}">
+              <option value="pdf">PDF</option>
+              <option value="video">Vidéo</option>
+              <option value="playlist">Playlist</option>
+              <option value="link">Lien</option>
+            </select>
+            <input type="text" id="reslabel-${modId}-${idx}" placeholder="Nom (ex: Cours AlloSchool)">
+            <input type="text" id="resurl-${modId}-${idx}" placeholder="https://...">
+            <button class="add-btn" onclick="addResource('${modId}',${idx})">+ Ajouter</button>
+          </div>
+          <div class="res-list" id="reslist-${modId}-${idx}">${resHTML || '<div style="font-size:12.5px;color:var(--ink-soft);padding:4px 0;">Aucune ressource encore — ajoute un lien PDF, une vidéo ou une playlist.</div>'}</div>
+          <div class="notes-box">
+            <textarea placeholder="Notes personnelles sur ce chapitre..." id="notes-${modId}-${idx}" onblur="saveNotes('${modId}',${idx})">${escapeHtml(data.notes||"")}</textarea>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="back-link" onclick="goView('modules')">← Retour aux modules</div>
+    <div class="module-header">
+      <div class="icon-badge-lg" style="background:${mod.color}">${mod.icon}</div>
+      <div>
+        <h2>${mod.name}</h2>
+        <div class="meta-line">${mod.block === 'national' ? 'Examen national' : 'Examen régional'} · Coefficient ${mod.coef} · Épreuve de ${mod.duration} · ${p.done}/${p.total} chapitres maîtrisés (${p.pct}%)</div>
+      </div>
+    </div>
+    <div class="bar" style="margin-bottom:22px;"><div style="width:${p.pct}%; background:${mod.color}; height:9px;"></div></div>
+    ${chaptersHTML}
+  `;
+}
+
+function toggleExpand(modId, idx){
+  const body = document.getElementById(`chapbody-${modId}-${idx}`);
+  const btn = document.getElementById(`expbtn-${modId}-${idx}`);
+  const open = body.classList.toggle("open");
+  btn.textContent = open ? "− masquer" : "+ ressources";
+}
+
+function toggleChapter(modId, idx){
+  const data = getChapterData(modId, idx);
+  data.done = !data.done;
+  saveState();
+  renderModuleDetail(modId);
+  renderSidebarProgress();
+}
+
+function addResource(modId, idx){
+  const type = document.getElementById(`restype-${modId}-${idx}`).value;
+  const label = document.getElementById(`reslabel-${modId}-${idx}`).value.trim();
+  const url = document.getElementById(`resurl-${modId}-${idx}`).value.trim();
+  if(!url){ showToast("Ajoute un lien avant de valider."); return; }
+  let finalUrl = url;
+  if(!/^https?:\/\//i.test(finalUrl)) finalUrl = "https://" + finalUrl;
+  const data = getChapterData(modId, idx);
+  data.resources = data.resources || [];
+  data.resources.push({ type, label: label || finalUrl, url: finalUrl });
+  saveState();
+  renderModuleDetail(modId);
+  // re-open the chapter we just edited
+  document.getElementById(`chapbody-${modId}-${idx}`).classList.add("open");
+  document.getElementById(`expbtn-${modId}-${idx}`).textContent = "− masquer";
+  showToast("Ressource ajoutée ✓");
+}
+
+function removeResource(modId, idx, resIdx){
+  const data = getChapterData(modId, idx);
+  data.resources.splice(resIdx, 1);
+  saveState();
+  renderModuleDetail(modId);
+  document.getElementById(`chapbody-${modId}-${idx}`).classList.add("open");
+  document.getElementById(`expbtn-${modId}-${idx}`).textContent = "− masquer";
+}
+
+function saveNotes(modId, idx){
+  const val = document.getElementById(`notes-${modId}-${idx}`).value;
+  getChapterData(modId, idx).notes = val;
+  saveState();
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+// ===================== RENDER: SIDEBAR MINI PROGRESS =====================
+function renderSidebarProgress(){
+  const g = globalProgress();
+  document.getElementById("sidebarPct").textContent = g.pct + "%";
+  document.getElementById("sidebarBar").style.width = g.pct + "%";
+}
+
+// ===================== AI CHAT (Gemini) =====================
+function renderAI(){
+  const el = document.getElementById("view-ai");
+  if(!STATE.geminiKey){
+    el.innerHTML = `
+      <div class="gemini-setup">
+        <h3>Connecte ton assistant Gemini</h3>
+        <p>Pour avoir une IA disponible 24/7 sans aucune limite de tokens côté plateforme, branche ta propre clé API Gemini (gratuite). Elle reste stockée uniquement dans ton navigateur — jamais envoyée ailleurs.</p>
+        <input type="password" id="geminiKeyInput" placeholder="Colle ta clé API Gemini ici (AIza...)">
+        <button class="save-btn" onclick="saveGeminiKey()">Connecter Gemini</button>
+        <div class="hint">Pas de clé ? Récupère-en une gratuitement sur <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> avec ton compte Google, puis colle-la ici.</div>
+      </div>
+    `;
+    return;
+  }
+
+  el.innerHTML = `
+    <div id="chatPanel" style="border:1px solid var(--line); border-radius:14px; background:#fff; box-shadow:var(--shadow); overflow:hidden; height:70vh;">
+      <div id="chatHeader">
+        <div>
+          <strong style="font-size:14px;">Assistant Gemini</strong>
+          <div style="font-size:12px; color:var(--ink-soft);">Connecté avec ta clé personnelle</div>
+        </div>
+        <button class="add-btn" onclick="disconnectGemini()">Déconnecter</button>
+      </div>
+      <div id="chatMessages"></div>
+      <div id="chatInputBar">
+        <textarea id="chatInput" placeholder="Demande une explication, un exercice, une méthode..." onkeydown="handleChatKey(event)"></textarea>
+        <button id="chatSendBtn" onclick="sendChatMessage()">Envoyer</button>
+      </div>
+    </div>
+  `;
+  renderChatMessages();
+}
+
+function handleChatKey(e){
+  if(e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendChatMessage();
+  }
+}
+
+function saveGeminiKey(){
+  const key = document.getElementById("geminiKeyInput").value.trim();
+  if(!key){ showToast("Colle une clé valide."); return; }
+  STATE.geminiKey = key;
+  saveState();
+  renderAI();
+  showToast("Gemini connecté ✓");
+}
+
+function disconnectGemini(){
+  STATE.geminiKey = "";
+  saveState();
+  renderAI();
+}
+
+function renderChatMessages(){
+  const box = document.getElementById("chatMessages");
+  if(!box) return;
+  if(STATE.chatHistory.length === 0){
+    box.innerHTML = `<div class="msg sys">Pose ta première question — physique, chimie, maths, méthodologie... tout ce que tu veux, sans limite.</div>`;
+    return;
+  }
+  box.innerHTML = STATE.chatHistory.map(m =>
+    `<div class="msg ${m.role === 'user' ? 'user' : 'ai'}">${escapeHtml(m.text)}</div>`
+  ).join("");
+  box.scrollTop = box.scrollHeight;
+}
+
+async function sendChatMessage(){
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = "";
+  STATE.chatHistory.push({ role: "user", text });
+  saveState();
+  renderChatMessages();
+
+  const btn = document.getElementById("chatSendBtn");
+  btn.disabled = true;
+  const box = document.getElementById("chatMessages");
+  box.insertAdjacentHTML("beforeend", `<div class="msg ai" id="loadingMsg">···</div>`);
+  box.scrollTop = box.scrollHeight;
+
+  try{
+    const contents = STATE.chatHistory.map(m => ({
+      role: m.role === "user" ? "user" : "model",
+      parts: [{ text: m.text }]
+    }));
+
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${STATE.geminiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents,
+          systemInstruction: {
+            parts: [{ text: "Tu es un assistant pédagogique pour un élève marocain qui prépare le Bac Libre, filière Sciences Physiques. Réponds en français clair, de façon précise et pédagogique, avec des exemples si utile. Adapte-toi au programme marocain (maths, physique-chimie, SVT, philo, français, anglais)." }]
+          }
+        })
+      }
+    );
+    const json = await resp.json();
+    document.getElementById("loadingMsg")?.remove();
+
+    if(json.error){
+      STATE.chatHistory.push({ role:"ai", text: "Erreur Gemini : " + json.error.message });
+    } else {
+      const reply = json.candidates?.[0]?.content?.parts?.[0]?.text || "Pas de réponse reçue.";
+      STATE.chatHistory.push({ role: "ai", text: reply });
+    }
+  }catch(err){
+    document.getElementById("loadingMsg")?.remove();
+    STATE.chatHistory.push({ role:"ai", text: "Erreur de connexion à Gemini : " + err.message });
+  }
+
+  saveState();
+  renderChatMessages();
+  btn.disabled = false;
+}
+
+// ===================== DRIVE & RESSOURCES =====================
+function renderDrive(){
+  const el = document.getElementById("view-drive");
+  const queueHTML = STATE.downloadQueue.map((item, i) => `
+    <div class="queue-item">
+      <span>📄</span>
+      <a href="${escapeAttr(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.name)}</a>
+      <a class="open-btn" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">Ouvrir</a>
+      <span class="rm" onclick="removeQueueItem(${i})">✕</span>
+    </div>
+  `).join("") || `<div style="font-size:13px;color:var(--ink-soft);">Aucun fichier en attente.</div>`;
+
+  el.innerHTML = `
+    <div class="drive-card">
+      <h3>📁 Ton Google Drive</h3>
+      <p>Lie le dossier Drive où tu ranges tes fichiers de révision pour y accéder en un clic depuis ici.</p>
+      ${STATE.driveLink
+        ? `<div class="saved-drive-link">📁 <a href="${escapeAttr(STATE.driveLink)}" target="_blank" rel="noopener">${escapeHtml(STATE.driveLink)}</a><span class="rm" onclick="clearDriveLink()" style="margin-left:auto;">✕</span></div>`
+        : `<div class="drive-link-row">
+            <input type="text" id="driveLinkInput" placeholder="Lien de ton dossier Google Drive...">
+            <button class="drive-btn" onclick="saveDriveLink()">Lier le dossier</button>
+          </div>`
+      }
+    </div>
+
+    <div class="drive-card">
+      <h3>⬇ File d'attente de téléchargement</h3>
+      <p>Important : je ne peux pas télécharger et déposer automatiquement des fichiers dans ton Drive en arrière-plan — cette plateforme tourne dans ton navigateur et n'a pas d'accès serveur à ton compte Google. En revanche, colle ici tous les liens PDF que tu veux traiter : ça te fait une liste organisée, et chaque clic sur "Ouvrir" t'amène directement au PDF pour que tu fasses "Fichier → Enregistrer dans Drive" ou un glisser-déposer — en 2 secondes par fichier au lieu de chercher chaque lien dans ton historique.</p>
+      <div class="drive-link-row">
+        <input type="text" id="queueNameInput" placeholder="Nom du fichier" style="max-width:200px;">
+        <input type="text" id="queueUrlInput" placeholder="Lien du PDF...">
+        <button class="drive-btn secondary" onclick="addQueueItem()">+ Ajouter à la liste</button>
+      </div>
+      <div style="margin-top:14px;">${queueHTML}</div>
+    </div>
+  `;
+}
+
+function saveDriveLink(){
+  const val = document.getElementById("driveLinkInput").value.trim();
+  if(!val){ showToast("Colle un lien Drive."); return; }
+  STATE.driveLink = val.startsWith("http") ? val : "https://" + val;
+  saveState();
+  renderDrive();
+  showToast("Dossier Drive lié ✓");
+}
+function clearDriveLink(){
+  STATE.driveLink = "";
+  saveState();
+  renderDrive();
+}
+function addQueueItem(){
+  const name = document.getElementById("queueNameInput").value.trim() || "Document";
+  const url = document.getElementById("queueUrlInput").value.trim();
+  if(!url){ showToast("Colle un lien PDF."); return; }
+  const finalUrl = /^https?:\/\//i.test(url) ? url : "https://" + url;
+  STATE.downloadQueue.push({ name, url: finalUrl, addedAt: Date.now() });
+  saveState();
+  renderDrive();
+}
+function removeQueueItem(i){
+  STATE.downloadQueue.splice(i, 1);
+  saveState();
+  renderDrive();
+}
+
+// ===================== SETTINGS =====================
+function renderSettings(){
+  const el = document.getElementById("view-settings");
+  el.innerHTML = `
+    <div class="drive-card" style="max-width:480px;">
+      <h3>📅 Date de l'examen national</h3>
+      <p>La session normale 2027 n'est pas encore officiellement annoncée — basée sur le calendrier habituel (début juin), modifie-la dès que le ministère publie la date exacte.</p>
+      <div class="drive-link-row">
+        <input type="date" id="examDateInput" value="${STATE.examDate}">
+        <button class="drive-btn" onclick="saveExamDate()">Enregistrer</button>
+      </div>
+    </div>
+
+    <div class="drive-card" style="max-width:480px;">
+      <h3>💾 Sauvegarde de tes données</h3>
+      <p>Tes données sont stockées uniquement dans ce navigateur, sur cet appareil. Si tu changes de téléphone, d'ordinateur, ou si tu effaces les données du navigateur, tout disparaît — sauf si tu as un fichier de sauvegarde. Télécharge-le régulièrement et garde-le dans ton Drive.</p>
+      <div style="display:flex; gap:10px;">
+        <button class="drive-btn" onclick="exportBackup()">⬇ Télécharger une sauvegarde</button>
+        <button class="drive-btn secondary" onclick="document.getElementById('importFile').click()">⬆ Restaurer une sauvegarde</button>
+      </div>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+    </div>
+
+    <div class="drive-card" style="max-width:480px;">
+      <h3>🗑 Réinitialiser les données</h3>
+      <p>Efface toute ta progression, tes ressources et ton historique de chat sur cet appareil. Action irréversible — fais une sauvegarde avant si besoin.</p>
+      <button class="drive-btn secondary" onclick="resetAllData()">Réinitialiser tout</button>
+    </div>
+  `;
+}
+
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(STATE, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `bac-libre-sauvegarde-${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Sauvegarde téléchargée ✓");
+}
+
+function importBackup(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try{
+      const parsed = JSON.parse(e.target.result);
+      if(!parsed || typeof parsed !== "object"){ throw new Error("format invalide"); }
+      STATE = Object.assign(structuredClone(DEFAULT_STATE), parsed);
+      saveState();
+      goView("dashboard");
+      renderSidebarProgress();
+      showToast("Sauvegarde restaurée ✓");
+    }catch(err){
+      showToast("Fichier invalide — impossible de restaurer.");
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
+function saveExamDate(){
+  const val = document.getElementById("examDateInput").value;
+  if(!val){ return; }
+  STATE.examDate = val;
+  saveState();
+  renderCountdown();
+  showToast("Date mise à jour ✓");
+}
+function resetAllData(){
+  if(!confirm("Tout effacer ? Cette action est irréversible.")) return;
+  STATE = structuredClone(DEFAULT_STATE);
+  saveState();
+  goView("dashboard");
+  renderSidebarProgress();
+  showToast("Données réinitialisées.");
+}
+
+// ===================== INIT =====================
+function init(){
+  try{
+    loadState();
+  }catch(e){
+    console.warn("init load error", e);
+  }
+  renderCountdown();
+  setInterval(renderCountdown, 60000);
+  renderSidebarProgress();
+  renderDashboard();
+
+  document.querySelectorAll(".navbtn").forEach(btn => {
+    btn.addEventListener("click", () => goView(btn.dataset.view));
+  });
+  document.getElementById("menuToggle").addEventListener("click", () => {
+    document.getElementById("sidebar").classList.toggle("open");
+  });
+}
+
+init();
+
+</script>
+</body>
+</html>
