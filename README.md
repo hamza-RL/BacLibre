@@ -3,7 +3,7 @@
 Plateforme de suivi de révision pour le Bac Libre, filière Sciences Physiques (Maroc).
 
 ## Utilisation
-Ouvre `index.html` dans un navigateur, ou héberge ce dossier sur GitHub Pages pour avoir une URL permanente.
+Ouvre `index.html` dans, un navigateur, ou héberge ce dossier sur GitHub Pages pour avoir une URL permanente.
 
 ## Important
 Les données (progression, ressources, notes, historique du chat IA) sont stockées **localement dans ton navigateur** (localStorage). Elles ne sont liées à aucun compte et ne se synchronisent pas automatiquement entre appareils.
