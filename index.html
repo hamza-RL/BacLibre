@@ -21,6 +21,20 @@
     --shadow: 0 1px 2px rgba(40,50,70,.04), 0 6px 20px rgba(40,50,70,.06);
     font-family: 'Söhne', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
+  body.dark{
+    --bg: #14171f;
+    --bg-soft: #1c2029;
+    --ink: #e4e7ee;
+    --ink-soft: #8b93a5;
+    --line: #2a2f3b;
+    --slate: #6f93b3;
+    --slate-deep: #8ab0d4;
+    --amber: #e0a85e;
+    --amber-soft: #3a3020;
+    --green: #7fae7f;
+    --red: #d18a7a;
+    --shadow: 0 1px 2px rgba(0,0,0,.2), 0 6px 20px rgba(0,0,0,.3);
+  }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%;}
   body{
@@ -29,19 +43,19 @@
     font-size:15px;
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
+    transition:background .2s, color .2s;
   }
   ::-webkit-scrollbar{width:8px; height:8px;}
   ::-webkit-scrollbar-thumb{background:#d3d9e3; border-radius:8px;}
   ::-webkit-scrollbar-track{background:transparent;}
+  body.dark ::-webkit-scrollbar-thumb{background:#3a3f4d;}
 
   a{color:var(--slate-deep); text-decoration:none;}
 
-  button{
-    font-family:inherit; cursor:pointer; border:none; background:none;
-  }
+  button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit;}
   input, select, textarea{
     font-family:inherit; font-size:14px; border:1px solid var(--line);
-    border-radius:8px; padding:8px 10px; background:#fff; color:var(--ink);
+    border-radius:8px; padding:8px 10px; background:var(--bg-soft); color:var(--ink);
     outline:none; transition:border-color .15s;
   }
   input:focus, select:focus, textarea:focus{border-color:var(--slate);}
@@ -56,9 +70,7 @@
     display:flex; flex-direction:column; padding:20px 14px;
     position:sticky; top:0; height:100vh;
   }
-  .brand{
-    display:flex; align-items:center; gap:10px; padding:4px 8px 18px 8px;
-  }
+  .brand{display:flex; align-items:center; gap:10px; padding:4px 8px 18px 8px;}
   .brand-mark{
     width:34px; height:34px; border-radius:10px;
     background:linear-gradient(135deg,var(--slate),var(--slate-deep));
@@ -69,27 +81,35 @@
   .brand-text strong{font-size:14px; letter-spacing:.2px;}
   .brand-text span{font-size:11px; color:var(--ink-soft);}
 
-  nav.navlist{display:flex; flex-direction:column; gap:2px; margin-top:6px;}
+  nav.navlist{display:flex; flex-direction:column; gap:2px; margin-top:6px; overflow-y:auto;}
   .navbtn{
     display:flex; align-items:center; gap:10px;
     padding:9px 10px; border-radius:9px; font-size:13.5px;
     color:var(--ink-soft); font-weight:500; text-align:left; width:100%;
   }
   .navbtn .ic{width:18px; text-align:center; opacity:.8; font-size:14px;}
-  .navbtn:hover{background:#f0f3f7; color:var(--ink);}
+  .navbtn:hover{background:var(--bg); color:var(--ink);}
   .navbtn.active{background:var(--slate); color:#fff;}
   .navbtn.active .ic{opacity:1;}
 
   .sidebar-divider{height:1px; background:var(--line); margin:14px 4px;}
+  .nav-group-label{font-size:10.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); padding:10px 10px 4px; opacity:.7;}
 
   #sidebar-progress{
     margin-top:auto; padding:14px 10px; border-radius:12px;
-    background:#f7f9fb; border:1px solid var(--line);
+    background:var(--bg); border:1px solid var(--line); flex-shrink:0;
   }
   #sidebar-progress .label{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px;}
   #sidebar-progress .pct{font-size:24px; font-weight:700; color:var(--slate-deep);}
-  .miniBar{height:6px; border-radius:6px; background:#e7eaf0; margin-top:8px; overflow:hidden;}
+  .miniBar{height:6px; border-radius:6px; background:var(--line); margin-top:8px; overflow:hidden;}
   .miniBar > div{height:100%; background:linear-gradient(90deg,var(--slate),var(--amber)); border-radius:6px; transition:width .4s;}
+
+  .darkToggleRow{display:flex; align-items:center; justify-content:space-between; padding:8px 10px; margin-top:8px;}
+  .darkToggleRow span{font-size:12.5px; color:var(--ink-soft);}
+  .switch{width:36px; height:20px; border-radius:20px; background:var(--line); position:relative; cursor:pointer; flex-shrink:0;}
+  .switch.on{background:var(--slate);}
+  .switch .knob{width:16px; height:16px; border-radius:50%; background:#fff; position:absolute; top:2px; left:2px; transition:left .15s;}
+  .switch.on .knob{left:18px;}
 
   /* ----- Main content ----- */
   #main{flex:1; min-width:0; display:flex; flex-direction:column;}
@@ -101,196 +121,238 @@
   #topbar h1{font-size:18px; font-weight:650;}
   #topbar .sub{font-size:12.5px; color:var(--ink-soft); margin-top:2px;}
 
-  #countdown{
-    display:flex; align-items:center; gap:14px;
-    background:#fff; border:1px solid var(--line); border-radius:12px;
-    padding:8px 16px; box-shadow:var(--shadow);
-  }
+  #countdown{display:flex; align-items:center; gap:14px; background:var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding:8px 16px; box-shadow:var(--shadow);}
   .cd-unit{display:flex; flex-direction:column; align-items:center; min-width:42px;}
   .cd-unit b{font-size:19px; font-weight:700; color:var(--slate-deep); line-height:1;}
   .cd-unit span{font-size:9.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.4px; margin-top:2px;}
   .cd-sep{color:var(--line); font-size:14px;}
   #countdown .editdate{font-size:11px; color:var(--ink-soft); cursor:pointer; margin-left:6px; text-decoration:underline; text-decoration-color:var(--line);}
 
-  #content{flex:1; padding:26px 28px 60px; overflow-y:auto;}
+  #content{flex:1; padding:26px 28px 80px; overflow-y:auto;}
   .view{display:none;}
   .view.active{display:block; animation:fadeIn .25s ease;}
   @keyframes fadeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
 
+  .distraction-free #sidebar, .distraction-free #topbar, .distraction-free #fabChat{display:none !important;}
+  .distraction-free #content{padding:30px 6vw; max-width:900px; margin:0 auto;}
+
   /* ----- Dashboard cards ----- */
-  .grid-stats{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;
-  }
-  .stat-card{
-    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
-    padding:16px 18px; box-shadow:var(--shadow);
-  }
+  .grid-stats{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;}
+  .stat-card{background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow);}
   .stat-card .num{font-size:26px; font-weight:700; color:var(--slate-deep);}
   .stat-card .lbl{font-size:12px; color:var(--ink-soft); margin-top:2px;}
 
-  .section-title{
-    font-size:13px; font-weight:650; text-transform:uppercase; letter-spacing:.6px;
-    color:var(--ink-soft); margin:28px 0 12px;
-  }
+  .section-title{font-size:13px; font-weight:650; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); margin:28px 0 12px; display:flex; align-items:center; justify-content:space-between;}
   .section-title:first-child{margin-top:0;}
 
   .module-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px;}
-  .module-card{
-    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
-    padding:18px; cursor:pointer; box-shadow:var(--shadow);
-    transition:transform .15s, box-shadow .15s; position:relative; overflow:hidden;
-  }
-  .module-card:hover{transform:translateY(-2px); box-shadow:0 4px 16px rgba(40,50,70,.1);}
+  .module-card{background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius); padding:18px; cursor:pointer; box-shadow:var(--shadow); transition:transform .15s, box-shadow .15s; position:relative; overflow:hidden;}
+  .module-card:hover{transform:translateY(-2px); box-shadow:0 4px 16px rgba(40,50,70,.12);}
   .module-card .top-row{display:flex; align-items:center; justify-content:space-between;}
-  .module-card .icon-badge{
-    width:38px; height:38px; border-radius:10px; display:flex; align-items:center;
-    justify-content:center; font-weight:700; font-size:15px; color:#fff; flex-shrink:0;
-  }
-  .module-card .coef-tag{font-size:11px; color:var(--ink-soft); background:#f1f3f7; border-radius:6px; padding:3px 8px; font-weight:600;}
+  .module-card .icon-badge{width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; color:#fff; flex-shrink:0;}
+  .module-card .coef-tag{font-size:11px; color:var(--ink-soft); background:var(--bg); border-radius:6px; padding:3px 8px; font-weight:600;}
   .module-card h3{font-size:15.5px; font-weight:650; margin-top:12px;}
   .module-card .meta{font-size:12px; color:var(--ink-soft); margin-top:2px;}
   .module-card .pctline{display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:12px; color:var(--ink-soft);}
   .module-card .pctline b{color:var(--ink); font-size:13px;}
-  .module-card .bar{height:7px; border-radius:7px; background:#eef0f4; margin-top:8px; overflow:hidden;}
+  .module-card .bar{height:7px; border-radius:7px; background:var(--bg); margin-top:8px; overflow:hidden;}
   .module-card .bar > div{height:100%; border-radius:7px; transition:width .4s;}
 
   /* ----- Module detail view ----- */
-  .module-header{
-    display:flex; align-items:center; gap:16px; margin-bottom:20px; flex-wrap:wrap;
-  }
-  .module-header .icon-badge-lg{
-    width:52px; height:52px; border-radius:14px; display:flex; align-items:center;
-    justify-content:center; font-weight:700; font-size:20px; color:#fff;
-  }
+  .module-header{display:flex; align-items:center; gap:16px; margin-bottom:20px; flex-wrap:wrap; justify-content:space-between;}
+  .module-header-left{display:flex; align-items:center; gap:16px;}
+  .module-header .icon-badge-lg{width:52px; height:52px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px; color:#fff;}
   .module-header h2{font-size:22px; font-weight:700;}
   .module-header .meta-line{font-size:13px; color:var(--ink-soft); margin-top:3px;}
   .back-link{font-size:13px; color:var(--ink-soft); margin-bottom:14px; display:inline-flex; align-items:center; gap:4px; cursor:pointer;}
   .back-link:hover{color:var(--ink);}
 
-  .chapter-card{
-    background:#fff; border:1px solid var(--line); border-radius:12px;
-    padding:16px 18px; margin-bottom:10px; transition:border-color .15s;
-  }
-  .chapter-card.done{border-color:#cfe0cf; background:#fafdf9;}
+  .tab-row{display:flex; gap:6px; margin-bottom:18px; border-bottom:1px solid var(--line);}
+  .tab-btn{padding:9px 14px; font-size:13px; font-weight:600; color:var(--ink-soft); border-bottom:2px solid transparent; cursor:pointer;}
+  .tab-btn.active{color:var(--slate-deep); border-bottom-color:var(--slate);}
+
+  .chapter-card{background:var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding:16px 18px; margin-bottom:10px; transition:border-color .15s;}
+  .chapter-card.done{border-color:#cfe0cf;}
+  body.dark .chapter-card.done{border-color:#3d5a3d;}
   .chapter-top{display:flex; align-items:flex-start; gap:12px;}
-  .chk{
-    width:22px; height:22px; border-radius:7px; border:2px solid var(--line);
-    flex-shrink:0; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; transition:all .15s; margin-top:1px;
-  }
+  .chk{width:22px; height:22px; border-radius:7px; border:2px solid var(--line); flex-shrink:0; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .15s; margin-top:1px;}
   .chk.checked{background:var(--green); border-color:var(--green); color:#fff;}
   .chapter-title{flex:1; font-size:14.5px; font-weight:600; line-height:1.4;}
-  .chapter-title.done{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:#c9d6c9;}
+  .chapter-title.done{color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--line);}
   .chapter-num{font-size:11.5px; color:var(--ink-soft); font-weight:600; margin-right:4px;}
-  .expand-btn{font-size:12px; color:var(--ink-soft); cursor:pointer; padding:4px 8px; border-radius:6px;}
-  .expand-btn:hover{background:#f1f3f7;}
+  .expand-btn{font-size:12px; color:var(--ink-soft); cursor:pointer; padding:4px 8px; border-radius:6px; white-space:nowrap;}
+  .expand-btn:hover{background:var(--bg);}
+  .chapter-actions{display:flex; gap:4px; flex-shrink:0;}
+  .icon-btn{font-size:13px; color:var(--ink-soft); cursor:pointer; padding:4px 7px; border-radius:6px;}
+  .icon-btn:hover{background:var(--bg); color:var(--ink);}
+  .icon-btn.danger:hover{color:var(--red);}
 
   .chapter-body{display:none; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);}
   .chapter-body.open{display:block;}
 
-  .res-row{display:flex; gap:8px; margin-bottom:8px; align-items:center;}
-  .res-row input{flex:1;}
+  .confidence-row{display:flex; align-items:center; gap:8px; margin-bottom:14px;}
+  .confidence-row span.lbl{font-size:12px; color:var(--ink-soft);}
+  .conf-dot{width:24px; height:24px; border-radius:50%; border:1.5px solid var(--line); cursor:pointer; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--ink-soft);}
+  .conf-dot.active-1{background:#d18a7a; border-color:#d18a7a; color:#fff;}
+  .conf-dot.active-2{background:#dba968; border-color:#dba968; color:#fff;}
+  .conf-dot.active-3{background:#d9c168; border-color:#d9c168; color:#fff;}
+  .conf-dot.active-4{background:#9bbf7e; border-color:#9bbf7e; color:#fff;}
+  .conf-dot.active-5{background:#6f9b6f; border-color:#6f9b6f; color:#fff;}
+
+  .res-row{display:flex; gap:8px; margin-bottom:8px; align-items:center; flex-wrap:wrap;}
+  .res-row input{flex:1; min-width:120px;}
   .res-row select{width:110px; flex-shrink:0;}
   .res-list{display:flex; flex-direction:column; gap:6px; margin-top:6px;}
-  .res-item{
-    display:flex; align-items:center; gap:8px; padding:7px 10px;
-    background:#f7f9fb; border-radius:8px; font-size:13px;
-  }
+  .res-item{display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--bg); border-radius:8px; font-size:13px;}
   .res-item .res-ic{width:16px; flex-shrink:0; text-align:center; opacity:.7;}
   .res-item a{flex:1; color:var(--ink); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .res-item a:hover{color:var(--slate-deep); text-decoration:underline;}
-  .res-item .rm{color:#c9a9a9; font-size:14px; flex-shrink:0; cursor:pointer; padding:2px 5px;}
+  .res-item .rm{color:var(--ink-soft); font-size:14px; flex-shrink:0; cursor:pointer; padding:2px 5px;}
   .res-item .rm:hover{color:var(--red);}
   .res-item .tag{font-size:10px; padding:2px 6px; border-radius:5px; font-weight:700; text-transform:uppercase; flex-shrink:0;}
   .tag-pdf{background:#fde3df; color:#a4503f;}
   .tag-video{background:#e0e9f5; color:#3f5b73;}
   .tag-playlist{background:#ece0f5; color:#6b3f8a;}
   .tag-link{background:#e3eee3; color:#3f6b3f;}
+  body.dark .tag-pdf{background:#4a2e29; color:#e8a895;}
+  body.dark .tag-video{background:#27384a; color:#a8c5e8;}
+  body.dark .tag-playlist{background:#3a2c4a; color:#cba8e8;}
+  body.dark .tag-link{background:#2c3e2c; color:#a8d8a8;}
 
-  .add-btn{
-    font-size:12.5px; color:var(--slate-deep); font-weight:600; cursor:pointer;
-    padding:6px 10px; border-radius:7px; border:1px dashed var(--slate); display:inline-flex; align-items:center; gap:5px;
-  }
-  .add-btn:hover{background:#eef3f7;}
+  .add-btn{font-size:12.5px; color:var(--slate-deep); font-weight:600; cursor:pointer; padding:6px 10px; border-radius:7px; border:1px dashed var(--slate); display:inline-flex; align-items:center; gap:5px;}
+  .add-btn:hover{background:var(--bg);}
 
   .notes-box{margin-top:10px;}
   .notes-box textarea{width:100%; min-height:60px; resize:vertical; font-size:13px;}
 
-  /* ----- AI Chat ----- */
-  #chatPanel{display:flex; flex-direction:column; height:calc(100vh - 0px);}
-  #chatHeader{padding:18px 22px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between;}
-  #chatMessages{flex:1; overflow-y:auto; padding:20px 22px; display:flex; flex-direction:column; gap:14px;}
-  .msg{max-width:78%; padding:11px 14px; border-radius:14px; font-size:14px; line-height:1.5; white-space:pre-wrap;}
-  .msg.user{align-self:flex-end; background:var(--slate); color:#fff; border-bottom-right-radius:4px;}
-  .msg.ai{align-self:flex-start; background:#fff; border:1px solid var(--line); border-bottom-left-radius:4px;}
-  .msg.sys{align-self:center; font-size:12px; color:var(--ink-soft); background:none;}
-  #chatInputBar{padding:16px 22px; border-top:1px solid var(--line); display:flex; gap:10px;}
-  #chatInputBar textarea{flex:1; resize:none; min-height:42px; max-height:140px; font-size:14px;}
-  #chatInputBar button{background:var(--slate); color:#fff; padding:0 18px; border-radius:9px; font-weight:600; font-size:13.5px;}
-  #chatInputBar button:disabled{opacity:.5; cursor:default;}
+  .edit-chapter-row{display:flex; gap:8px; flex:1;}
+  .edit-chapter-row input{flex:1;}
 
-  .gemini-setup{
-    background:#fff; border:1px solid var(--line); border-radius:14px;
-    padding:22px; max-width:520px; margin:30px auto; box-shadow:var(--shadow);
+  .link-card{background:var(--bg-soft); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; gap:12px;}
+  .link-card .ic{font-size:16px; opacity:.7;}
+  .link-card a{flex:1; font-weight:600; font-size:14px;}
+  .link-card .desc{font-size:12px; color:var(--ink-soft);}
+
+  .flash-controls{display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; align-items:center;}
+  .flashcard{
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow);
+    min-height:220px; display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:30px; cursor:pointer; font-size:17px; font-weight:600; line-height:1.5; position:relative;
+    max-width:680px; margin:0 auto 20px;
   }
-  .gemini-setup h3{font-size:16px; margin-bottom:8px;}
-  .gemini-setup p{font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;}
+  .flashcard .face-label{position:absolute; top:14px; left:18px; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:var(--ink-soft); font-weight:700;}
+  .flash-nav{display:flex; justify-content:center; gap:10px; align-items:center;}
+  .flash-nav button{background:var(--bg); border:1px solid var(--line); padding:8px 16px; border-radius:9px; font-size:13px; font-weight:600;}
+  .flash-nav button:hover{background:var(--slate); color:#fff;}
+  .flash-progress{text-align:center; font-size:12.5px; color:var(--ink-soft); margin-top:10px;}
+  .flash-rate-row{display:flex; justify-content:center; gap:8px; margin-top:16px;}
+  .flash-rate-row button{font-size:12.5px; padding:7px 14px; border-radius:8px; font-weight:600;}
+
+  .pomo-card{background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius); padding:30px; text-align:center; max-width:380px; margin:0 auto 24px; box-shadow:var(--shadow);}
+  .pomo-time{font-size:52px; font-weight:700; color:var(--slate-deep); letter-spacing:1px; margin:14px 0;}
+  .pomo-mode{font-size:12.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-soft); font-weight:700;}
+  .pomo-controls{display:flex; gap:10px; justify-content:center; margin-top:16px;}
+  .pomo-controls button{background:var(--slate); color:#fff; padding:10px 20px; border-radius:10px; font-weight:650; font-size:13.5px;}
+  .pomo-controls button.secondary{background:var(--bg); color:var(--ink);}
+  .pomo-select{display:flex; gap:8px; justify-content:center; margin-top:14px;}
+  .pomo-select select{font-size:13px;}
+
+  .session-log-item{display:flex; justify-content:space-between; padding:9px 12px; background:var(--bg); border-radius:8px; margin-bottom:6px; font-size:13px;}
+  .session-log-item .mod-name{font-weight:600;}
+  .session-log-item .dur{color:var(--ink-soft);}
+
+  .stale-item{display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--bg-soft); border:1px solid var(--line); border-radius:11px; margin-bottom:8px;}
+  .stale-item .badge{width:8px; height:8px; border-radius:50%; flex-shrink:0;}
+  .stale-item .info{flex:1;}
+  .stale-item .info .ch{font-size:13.5px; font-weight:600;}
+  .stale-item .info .mod{font-size:11.5px; color:var(--ink-soft);}
+  .stale-item .days{font-size:11.5px; color:var(--ink-soft); white-space:nowrap;}
+
+  #fabChat{
+    position:fixed; bottom:24px; right:24px; width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(135deg,var(--slate),var(--slate-deep)); color:#fff; font-size:24px;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 4px 18px rgba(40,60,90,.3);
+    cursor:pointer; z-index:80; transition:transform .15s;
+  }
+  #fabChat:hover{transform:scale(1.06);}
+  #chatWindow{
+    position:fixed; bottom:92px; right:24px; width:380px; max-width:92vw; height:520px; max-height:72vh;
+    background:var(--bg-soft); border:1px solid var(--line); border-radius:16px; box-shadow:0 10px 40px rgba(0,0,0,.18);
+    display:none; flex-direction:column; overflow:hidden; z-index:81;
+  }
+  #chatWindow.open{display:flex; animation:fadeIn .2s ease;}
+  #chatHeader{padding:14px 16px; border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; flex-shrink:0;}
+  #chatHeader strong{font-size:13.5px;}
+  #chatHeader .sub{font-size:11px; color:var(--ink-soft);}
+  #chatMessages{flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:12px;}
+  .msg{max-width:84%; padding:10px 13px; border-radius:13px; font-size:13.5px; line-height:1.5; white-space:pre-wrap;}
+  .msg.user{align-self:flex-end; background:var(--slate); color:#fff; border-bottom-right-radius:4px;}
+  .msg.ai{align-self:flex-start; background:var(--bg); border:1px solid var(--line); border-bottom-left-radius:4px;}
+  .msg.sys{align-self:center; font-size:11.5px; color:var(--ink-soft); background:none; text-align:center;}
+  .msg img.upload-preview{max-width:100%; border-radius:8px; margin-top:6px; display:block;}
+  #chatInputBar{padding:12px; border-top:1px solid var(--line); display:flex; gap:8px; flex-shrink:0; align-items:flex-end;}
+  #chatInputBar textarea{flex:1; resize:none; min-height:38px; max-height:100px; font-size:13px;}
+  #chatInputBar button.send-btn{background:var(--slate); color:#fff; padding:0 14px; height:38px; border-radius:9px; font-weight:600; font-size:13px;}
+  #chatInputBar button.send-btn:disabled{opacity:.5;}
+  #chatInputBar .photo-btn{font-size:17px; padding:0 8px; height:38px; color:var(--ink-soft); flex-shrink:0;}
+  .chat-shortcuts{display:flex; gap:6px; padding:0 12px 10px; flex-wrap:wrap; flex-shrink:0;}
+  .chat-shortcut-chip{font-size:11px; background:var(--bg); border:1px solid var(--line); padding:5px 9px; border-radius:14px; cursor:pointer; color:var(--ink-soft);}
+  .chat-shortcut-chip:hover{background:var(--slate); color:#fff; border-color:var(--slate);}
+
+  .gemini-setup{background:var(--bg-soft); border:1px solid var(--line); border-radius:14px; padding:22px; max-width:480px; box-shadow:var(--shadow);}
+  .gemini-setup h3{font-size:15px; margin-bottom:8px;}
+  .gemini-setup p{font-size:12.5px; color:var(--ink-soft); margin-bottom:14px; line-height:1.6;}
   .gemini-setup input{width:100%; margin-bottom:10px;}
   .gemini-setup .save-btn{background:var(--slate); color:#fff; padding:9px 16px; border-radius:8px; font-size:13.5px; font-weight:600;}
-  .gemini-setup .hint{font-size:11.5px; color:var(--ink-soft); margin-top:10px;}
+  .gemini-setup .hint{font-size:11px; color:var(--ink-soft); margin-top:10px;}
   .gemini-setup a{text-decoration:underline;}
 
-  /* ----- Resources / Drive view ----- */
-  .drive-card{
-    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
-    padding:22px; box-shadow:var(--shadow); margin-bottom:18px;
-  }
+  .drive-card{background:var(--bg-soft); border:1px solid var(--line); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:18px;}
   .drive-card h3{font-size:15px; margin-bottom:10px;}
   .drive-card p{font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:14px;}
-  .drive-link-row{display:flex; gap:10px;}
-  .drive-link-row input{flex:1;}
+  .drive-link-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .drive-link-row input{flex:1; min-width:160px;}
   .drive-btn{background:var(--amber); color:#5b3d18; padding:10px 18px; border-radius:9px; font-weight:650; font-size:13.5px; white-space:nowrap;}
-  .drive-btn.secondary{background:#eef0f4; color:var(--ink);}
-  .saved-drive-link{
-    display:flex; align-items:center; gap:10px; margin-top:12px; padding:12px 14px;
-    background:#fbf6ec; border:1px solid var(--amber-soft); border-radius:10px; font-size:13.5px;
-  }
+  .drive-btn.secondary{background:var(--bg); color:var(--ink);}
+  .saved-drive-link{display:flex; align-items:center; gap:10px; margin-top:12px; padding:12px 14px; background:var(--amber-soft); border:1px solid var(--amber); border-radius:10px; font-size:13.5px;}
   .saved-drive-link a{font-weight:650; color:var(--slate-deep);}
 
-  .queue-item{
-    display:flex; align-items:center; gap:10px; padding:10px 12px; background:#f7f9fb;
-    border-radius:9px; margin-bottom:8px; font-size:13px;
-  }
+  .queue-item{display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg); border-radius:9px; margin-bottom:8px; font-size:13px;}
   .queue-item a{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
   .queue-item .open-btn{background:var(--slate); color:#fff; padding:5px 12px; border-radius:7px; font-size:12px; font-weight:600; flex-shrink:0;}
-  .queue-item .rm{color:#c9a9a9; cursor:pointer; flex-shrink:0; padding:2px 6px;}
+  .queue-item .rm{color:var(--ink-soft); cursor:pointer; flex-shrink:0; padding:2px 6px;}
 
-  /* ----- Toast ----- */
-  #toast{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
-    background:#2a3142; color:#fff; padding:10px 18px; border-radius:10px; font-size:13px;
-    opacity:0; transition:all .25s; pointer-events:none; z-index:999;
-  }
+  .medecine-banner{background:linear-gradient(135deg,#3f5b73,#5b7c99); color:#fff; border-radius:var(--radius); padding:22px 24px; margin-bottom:22px;}
+  .medecine-banner h2{font-size:18px; margin-bottom:6px;}
+  .medecine-banner p{font-size:13px; opacity:.92; line-height:1.6;}
+  .medecine-formula{background:rgba(255,255,255,.14); border-radius:9px; padding:10px 14px; font-size:12.5px; margin-top:12px; font-family:monospace;}
+
+  #toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px); background:#2a3142; color:#fff; padding:10px 18px; border-radius:10px; font-size:13px; opacity:0; transition:all .25s; pointer-events:none; z-index:999;}
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 
   .empty-state{text-align:center; padding:50px 20px; color:var(--ink-soft);}
   .empty-state .big{font-size:38px; margin-bottom:10px;}
+
+  .focus-toggle-btn{position:fixed; top:18px; right:18px; z-index:90; font-size:12px; background:var(--bg-soft); border:1px solid var(--line); padding:7px 12px; border-radius:8px; color:var(--ink-soft); box-shadow:var(--shadow);}
 
   @media (max-width:880px){
     #sidebar{position:fixed; left:-240px; z-index:50; transition:left .2s; box-shadow:4px 0 20px rgba(0,0,0,.1);}
     #sidebar.open{left:0;}
     .grid-stats{grid-template-columns:repeat(2,1fr);}
     #topbar{padding:14px 16px;}
-    #content{padding:18px 16px 50px;}
+    #content{padding:18px 16px 80px;}
     #menuToggle{display:flex !important;}
+    #chatWindow{right:10px; bottom:84px; width:94vw;}
+    #fabChat{right:14px; bottom:14px;}
   }
-  #menuToggle{display:none; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; background:#fff; border:1px solid var(--line); font-size:16px;}
+  #menuToggle{display:none; align-items:center; justify-content:center; width:34px; height:34px; border-radius:8px; background:var(--bg-soft); border:1px solid var(--line); font-size:16px;}
 </style>
 </head>
 <body>
 
+<button class="focus-toggle-btn" id="focusToggleBtn" onclick="toggleDistractionFree()">⛶ Mode focus</button>
+
 <div id="app">
-  <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="brand">
       <div class="brand-mark">BL</div>
@@ -303,7 +365,13 @@
     <nav class="navlist">
       <button class="navbtn active" data-view="dashboard"><span class="ic">⌂</span> Tableau de bord</button>
       <button class="navbtn" data-view="modules"><span class="ic">▤</span> Modules &amp; matières</button>
-      <button class="navbtn" data-view="ai"><span class="ic">✦</span> Assistant IA</button>
+      <button class="navbtn" data-view="flashcards"><span class="ic">▢</span> Flashcards</button>
+      <button class="navbtn" data-view="pomodoro"><span class="ic">◷</span> Minuteur Pomodoro</button>
+      <button class="navbtn" data-view="planner"><span class="ic">↻</span> Révision hebdo</button>
+      <div class="sidebar-divider"></div>
+      <div class="nav-group-label">Concours</div>
+      <button class="navbtn" data-view="medecine"><span class="ic">✚</span> Concours Médecine</button>
+      <div class="sidebar-divider"></div>
       <button class="navbtn" data-view="drive"><span class="ic">⌘</span> Drive &amp; ressources</button>
       <button class="navbtn" data-view="settings"><span class="ic">⚙</span> Réglages</button>
     </nav>
@@ -314,10 +382,13 @@
       <div class="label">Progression globale</div>
       <div class="pct" id="sidebarPct">0%</div>
       <div class="miniBar"><div id="sidebarBar" style="width:0%"></div></div>
+      <div class="darkToggleRow">
+        <span>Mode sombre</span>
+        <div class="switch" id="darkSwitch" onclick="toggleDarkMode()"><div class="knob"></div></div>
+      </div>
     </div>
   </aside>
 
-  <!-- MAIN -->
   <main id="main">
     <div id="topbar">
       <div style="display:flex; align-items:center; gap:12px;">
@@ -331,20 +402,34 @@
     </div>
 
     <div id="content">
-      <!-- DASHBOARD VIEW -->
       <section class="view active" id="view-dashboard"></section>
-      <!-- MODULES VIEW -->
       <section class="view" id="view-modules"></section>
-      <!-- MODULE DETAIL VIEW -->
       <section class="view" id="view-detail"></section>
-      <!-- AI VIEW -->
-      <section class="view" id="view-ai"></section>
-      <!-- DRIVE VIEW -->
+      <section class="view" id="view-links"></section>
+      <section class="view" id="view-flashcards"></section>
+      <section class="view" id="view-pomodoro"></section>
+      <section class="view" id="view-planner"></section>
+      <section class="view" id="view-medecine"></section>
+      <section class="view" id="view-medecine-detail"></section>
       <section class="view" id="view-drive"></section>
-      <!-- SETTINGS VIEW -->
       <section class="view" id="view-settings"></section>
     </div>
   </main>
+</div>
+
+<div id="fabChat" onclick="toggleChatWindow()">✦</div>
+<div id="chatWindow">
+  <div id="chatHeader">
+    <div>
+      <strong>Assistant Gemini</strong>
+      <div class="sub" id="chatHeaderSub">Non connecté</div>
+    </div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <button class="icon-btn" onclick="openGeminiSettings()" title="Réglages">⚙</button>
+      <button class="icon-btn" onclick="toggleChatWindow()" title="Fermer">✕</button>
+    </div>
+  </div>
+  <div id="chatBody" style="flex:1; display:flex; flex-direction:column; overflow:hidden;"></div>
 </div>
 
 <div id="toast"></div>
@@ -364,6 +449,7 @@ const CURRICULUM = [
     coef: 7,
     duration: "3h",
     icon: "∑",
+    links: [],
     chapters: [
       "Limites et continuité",
       "Dérivation et étude des fonctions",
@@ -391,6 +477,7 @@ const CURRICULUM = [
     coef: 7,
     duration: "3h",
     icon: "⚛",
+    links: [],
     chapters: [
       // Physique
       "Ondes mécaniques progressives",
@@ -433,6 +520,7 @@ const CURRICULUM = [
     coef: 5,
     duration: "1h30",
     icon: "🧬",
+    links: [],
     chapters: [
       "Réactions libérant l'énergie potentielle de la matière organique (niveau cellulaire)",
       "Rôle du muscle squelettique dans la conversion d'énergie",
@@ -458,6 +546,7 @@ const CURRICULUM = [
     coef: 2,
     duration: "2h",
     icon: "🦉",
+    links: [],
     chapters: [
       "La personne (identité, valeur, liberté/nécessité)",
       "Autrui (existence et connaissance d'autrui, la relation à autrui)",
@@ -477,6 +566,7 @@ const CURRICULUM = [
     coef: 2,
     duration: "2h",
     icon: "En",
+    links: [],
     chapters: [
       "Reading comprehension techniques",
       "Grammar review — tenses & structures",
@@ -486,7 +576,7 @@ const CURRICULUM = [
     ]
   },
 
-  // ============== EXAMEN RÉGIONAL (1ère Bac — matières secondaires du Bac Libre) ==============
+  // ============== EXAMEN RÉGIONAL (matières secondaires du Bac Libre — basées sur 2ème Bac, sauf Histoire-Géo) ==============
   {
     id: "fr",
     name: "Français",
@@ -495,12 +585,17 @@ const CURRICULUM = [
     coef: 4,
     duration: "2h",
     icon: "Fr",
+    links: [],
     chapters: [
-      "Candide ou l'Optimisme — étude intégrale",
-      "Il était une fois un couple heureux — étude intégrale",
-      "Le Père Goriot — étude intégrale",
-      "Vocabulaire et expressions clés",
-      "Techniques de l'argumentation",
+      "Vocabulaire : schéma actanciel, types d'arguments, tonalités",
+      "Vocabulaire : discours direct/indirect, valeurs des temps verbaux",
+      "Vocabulaire : caractérisation, focalisation, figures de style",
+      "Il était une fois un vieux couple heureux (M. Khaïr-Eddine) — présentation et résumé",
+      "Il était une fois un vieux couple heureux — personnages et thèmes",
+      "Il était une fois un vieux couple heureux — étude méthodique de passages",
+      "Le Père Goriot (Balzac) — présentation et résumé",
+      "Le Père Goriot — personnages et le réalisme balzacien",
+      "Le Père Goriot — étude méthodique de passages",
       "Méthodologie du commentaire de texte",
       "Méthodologie de l'essai / production écrite"
     ]
@@ -513,13 +608,18 @@ const CURRICULUM = [
     coef: 2,
     duration: "2h",
     icon: "ع",
+    links: [],
     chapters: [
-      "النصوص الشعرية — العصر الحديث",
-      "النصوص النثرية — العصر الحديث",
+      "مجزوءة العولمة — مكون النصوص",
+      "مجزوءة العولمة — التعبير والإنشاء",
+      "مجزوءة الديمقراطية — مكون النصوص",
+      "مجزوءة الديمقراطية — التعبير والإنشاء",
+      "مجزوءة جمالية الفنون الأدبية — مكون النصوص",
+      "مجزوءة جمالية الفنون الأدبية — التعبير والإنشاء",
+      "مجزوءة جمالية الفنون البصرية — مكون النصوص",
+      "مجزوءة جمالية الفنون البصرية — التعبير والإنشاء",
       "القواعد النحوية والصرفية",
-      "البلاغة وأساليب التعبير",
-      "منهجية تحليل النص الأدبي",
-      "منهجية كتابة الإنشاء"
+      "منهجية تحليل النص الأدبي"
     ]
   },
   {
@@ -530,13 +630,20 @@ const CURRICULUM = [
     coef: 2,
     duration: "1h30",
     icon: "☾",
+    links: [],
     chapters: [
-      "القرآن الكريم — أحكام التجويد والحفظ",
-      "الحديث الشريف وعلومه",
-      "العقيدة الإسلامية",
-      "الفقه — العبادات والمعاملات",
-      "السيرة النبوية والقيم الإسلامية",
-      "قضايا فكرية ومعاصرة"
+      "القرآن الكريم — سورة يس (الأجزاء 1-3)",
+      "القرآن الكريم — سورة يس (الأجزاء 4-6)",
+      "مدخل التزكية (العقيدة) — التوحيد والحرية / الإلحاد بين الوهم والحقيقة",
+      "مدخل التزكية (العقيدة) — النظر والتفكر / القرآن الكريم منهج حياة",
+      "مدخل الاقتداء — إكمال الدين ووفاة الرسول ﷺ / نموذج الكمال البشري",
+      "مدخل الاقتداء — نماذج للتأسي / واجبنا نحو الرسول ﷺ",
+      "مدخل الاستجابة — خصائص الشريعة / مقاصدها",
+      "مدخل الاستجابة — ضوابط فهم النص الشرعي / الاجتهاد والتجديد",
+      "مدخل القسط — حق الله وحق النفس",
+      "مدخل القسط — حق الغير وحق البيئة",
+      "مدخل الحكمة — التصور الإسلامي للحرية / الإسلام وبناء الحضارة",
+      "مدخل الحكمة — الرحمة والرفق / صفات عباد الرحمان"
     ]
   },
   {
@@ -547,8 +654,9 @@ const CURRICULUM = [
     coef: 2,
     duration: "2h",
     icon: "🌍",
+    links: [],
     chapters: [
-      // Histoire (1ère Bac)
+      // Histoire (1ère Bac — seule matière régionale basée sur 1ère année)
       "Les transformations économiques, financières, sociales et intellectuelles du 19ème siècle",
       "La situation de l'Empire ottoman et les convoitises européennes",
       "La situation du Maroc avant le protectorat",
@@ -576,6 +684,7 @@ const CURRICULUM = [
     coef: 2,
     duration: "1h30",
     icon: "⇄",
+    links: [],
     chapters: [
       "Traduction arabe → français : textes de presse",
       "Traduction français → arabe : textes de presse",
@@ -592,18 +701,105 @@ const TOTAL_COEF = CURRICULUM.reduce((s, m) => s + m.coef, 0);
 const NATIONAL_COEF = CURRICULUM.filter(m => m.block === "national").reduce((s,m)=>s+m.coef,0);
 const REGIONAL_COEF = CURRICULUM.filter(m => m.block === "regional").reduce((s,m)=>s+m.coef,0);
 
+// ===================== CONCOURS MÉDECINE (FMP/FMD) =====================
+// Concours commun Médecine, Pharmacie, Médecine Dentaire — Maroc
+// Épreuve écrite : 2h, 4 matières, chacune notée /20, note < 3/20 = élimination
+const CONCOURS_MEDECINE = {
+  presection: {
+    title: "Présélection (avant l'écrit)",
+    formula: "Moyenne de présélection = (Moyenne Examen National × 75%) + (Moyenne Examen Régional × 25%)",
+    note: "Pour les titulaires d'un bac étranger : moyenne générale du bac. Seuls les présélectionnés sont convoqués à l'épreuve écrite."
+  },
+  writtenExam: {
+    duration: "2 heures",
+    eliminatoryThreshold: 3,
+    subjects: [
+      {
+        id: "concours-svt",
+        name: "Sciences de la Vie (Biologie)",
+        color: "#6f9b6f",
+        icon: "🧬",
+        coef: 1,
+        links: [],
+        chapters: [
+          "Révision intégrale du programme SVT 2ème Bac Sciences Physiques",
+          "Génétique humaine et génétique des populations — approfondissement",
+          "Immunologie — approfondissement",
+          "QCM rapides — vitesse et précision sous 2h"
+        ]
+      },
+      {
+        id: "concours-physique",
+        name: "Physique",
+        color: "#5b7c99",
+        icon: "⚛",
+        coef: 1,
+        links: [],
+        chapters: [
+          "Mécanique — lois de Newton, chute, satellites",
+          "Électricité — RC, RL, RLC",
+          "Ondes et physique moderne — décroissance radioactive, ondes",
+          "QCM rapides — vitesse et précision sous 2h"
+        ]
+      },
+      {
+        id: "concours-chimie",
+        name: "Chimie",
+        color: "#c98a4b",
+        icon: "🧪",
+        coef: 1,
+        links: [],
+        chapters: [
+          "Transformations chimiques — cinétique, équilibre",
+          "Acide-base et dosages",
+          "Oxydoréduction et piles",
+          "QCM rapides — vitesse et précision sous 2h"
+        ]
+      },
+      {
+        id: "concours-maths",
+        name: "Mathématiques",
+        color: "#9b7b9b",
+        icon: "∑",
+        coef: 1,
+        links: [],
+        chapters: [
+          "Fonctions, limites, dérivées — calcul rapide",
+          "Suites et probabilités",
+          "Calcul intégral et équations différentielles",
+          "QCM rapides — vitesse et précision sous 2h"
+        ]
+      }
+    ]
+  }
+};
+
+
 </script>
 <script>
+// Safe deep-clone fallback for browsers/devices without structuredClone (older phones, older Safari/Chrome)
+if (typeof structuredClone !== "function") {
+  window.structuredClone = function(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  };
+}
+
 // ===================== ÉTAT & PERSISTANCE =====================
-const STORAGE_KEY = "bacprep_state_v1";
+const STORAGE_KEY = "bacprep_state_v2";
 
 const DEFAULT_STATE = {
   examDate: "2027-06-03",
   geminiKey: "",
   driveLink: "",
-  chapters: {},     // chapterKey -> { done: bool, resources: [{type,label,url}], notes: "" }
-  downloadQueue: [], // [{url, name, addedAt}]
-  chatHistory: []
+  darkMode: false,
+  chapters: {},       // chapterKey -> { done, resources, notes, confidence, lastReviewed, custom, title }
+  moduleLinks: {},     // moduleId -> [{label,url}]
+  customChapters: {},  // moduleId -> [extra chapter titles added by user]
+  deletedChapters: {}, // moduleId -> [indices hidden/deleted]
+  downloadQueue: [],
+  chatHistory: [],
+  pomodoroLog: [],     // [{moduleId, moduleName, minutes, date}]
+  medecine: { chapters: {} } // concours-subjectId::idx -> {done, confidence}
 };
 
 let STATE = structuredClone(DEFAULT_STATE);
@@ -613,9 +809,31 @@ function chapterKey(moduleId, idx){ return moduleId + "::" + idx; }
 function getChapterData(moduleId, idx){
   const key = chapterKey(moduleId, idx);
   if(!STATE.chapters[key]){
-    STATE.chapters[key] = { done:false, resources:[], notes:"" };
+    STATE.chapters[key] = { done:false, resources:[], notes:"", confidence:0, lastReviewed:null };
   }
   return STATE.chapters[key];
+}
+
+function getMedChapterData(subjectId, idx){
+  const key = subjectId + "::" + idx;
+  if(!STATE.medecine.chapters[key]){
+    STATE.medecine.chapters[key] = { done:false, confidence:0 };
+  }
+  return STATE.medecine.chapters[key];
+}
+
+// Returns the live chapter list for a module: built-in (minus deleted, with title overrides) + custom appended
+function getModuleChapters(mod){
+  const deleted = new Set(STATE.deletedChapters[mod.id] || []);
+  const builtin = mod.chapters
+    .map((title, idx) => {
+      const override = STATE.chapters[chapterKey(mod.id, idx)];
+      const liveTitle = (override && override.title) ? override.title : title;
+      return { title: liveTitle, origIdx: idx };
+    })
+    .filter(c => !deleted.has(c.origIdx));
+  const custom = (STATE.customChapters[mod.id] || []).map((title, ci) => ({ title, origIdx: "custom:" + ci }));
+  return [...builtin, ...custom];
 }
 
 function saveState(){
@@ -630,6 +848,12 @@ function loadState(){
     if(raw){
       const parsed = JSON.parse(raw);
       STATE = Object.assign(structuredClone(DEFAULT_STATE), parsed);
+      STATE.chapters = parsed.chapters || {};
+      STATE.moduleLinks = parsed.moduleLinks || {};
+      STATE.customChapters = parsed.customChapters || {};
+      STATE.deletedChapters = parsed.deletedChapters || {};
+      STATE.pomodoroLog = parsed.pomodoroLog || [];
+      STATE.medecine = parsed.medecine || { chapters:{} };
     }
   }catch(e){
     // no saved data yet — keep defaults
@@ -644,12 +868,39 @@ function showToast(msg){
   t._timer = setTimeout(()=> t.classList.remove("show"), 2200);
 }
 
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+// ===================== DARK MODE =====================
+function applyDarkMode(){
+  document.body.classList.toggle("dark", !!STATE.darkMode);
+  const sw = document.getElementById("darkSwitch");
+  if(sw) sw.classList.toggle("on", !!STATE.darkMode);
+}
+function toggleDarkMode(){
+  STATE.darkMode = !STATE.darkMode;
+  saveState();
+  applyDarkMode();
+}
+
+// ===================== DISTRACTION-FREE MODE =====================
+function toggleDistractionFree(){
+  document.body.classList.toggle("distraction-free");
+  const on = document.body.classList.contains("distraction-free");
+  document.getElementById("focusToggleBtn").textContent = on ? "✕ Quitter le focus" : "⛶ Mode focus";
+}
+
 // ===================== PROGRESS CALCULATION =====================
 function moduleProgress(mod){
-  const total = mod.chapters.length;
+  const list = getModuleChapters(mod);
+  const total = list.length;
   let done = 0;
-  mod.chapters.forEach((_, idx) => {
-    if(getChapterData(mod.id, idx).done) done++;
+  list.forEach(c => {
+    const idx = c.origIdx;
+    const key = chapterKey(mod.id, idx);
+    if(STATE.chapters[key] && STATE.chapters[key].done) done++;
   });
   return { done, total, pct: total ? Math.round((done/total)*100) : 0 };
 }
@@ -683,7 +934,6 @@ function renderCountdown(){
   const target = new Date(STATE.examDate + "T08:00:00");
   const now = new Date();
   let diff = target - now;
-  let label = "Jour J 🎓";
   if(diff < 0){
     el.innerHTML = `<div class="cd-unit"><b>—</b><span>Examen passé</span></div>`;
     return;
@@ -705,6 +955,7 @@ function renderCountdown(){
 
 // ===================== NAVIGATION =====================
 let currentDetailModule = null;
+let currentLinksModule = null;
 
 function goView(name){
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -715,8 +966,11 @@ function goView(name){
 
   const titles = {
     dashboard: ["Tableau de bord", "Vue d'ensemble de ta préparation"],
-    modules: ["Modules & matières", "Toutes les matières de l'examen national"],
-    ai: ["Assistant IA", "Discute autant que tu veux, sans limite"],
+    modules: ["Modules & matières", "Toutes les matières de l'examen"],
+    flashcards: ["Flashcards", "Révision active par rappel"],
+    pomodoro: ["Minuteur Pomodoro", "Reste concentré, suis ton temps d'étude"],
+    planner: ["Révision hebdomadaire", "Ce que tu n'as pas revu depuis un moment"],
+    medecine: ["Concours Médecine", "Préparation au concours FMP/FMD"],
     drive: ["Drive & ressources", "Centralise tes fichiers et liens"],
     settings: ["Réglages", "Personnalise ta plateforme"]
   };
@@ -728,7 +982,10 @@ function goView(name){
 
   if(name === "dashboard") renderDashboard();
   if(name === "modules") renderModules();
-  if(name === "ai") renderAI();
+  if(name === "flashcards") renderFlashcardsHome();
+  if(name === "pomodoro") renderPomodoro();
+  if(name === "planner") renderPlanner();
+  if(name === "medecine") renderMedecineHome();
   if(name === "drive") renderDrive();
   if(name === "settings") renderSettings();
 }
@@ -743,6 +1000,16 @@ function openModuleDetail(modId){
   document.getElementById("pageTitle").textContent = mod.name;
   document.getElementById("pageSub").textContent = `Coefficient ${mod.coef} · Durée d'épreuve ${mod.duration}`;
   renderModuleDetail(modId);
+}
+
+function openModuleLinks(modId){
+  currentLinksModule = modId;
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-links").classList.add("active");
+  const mod = CURRICULUM.find(m => m.id === modId);
+  document.getElementById("pageTitle").textContent = "Liens — " + mod.name;
+  document.getElementById("pageSub").textContent = "Sites et ressources utiles pour toute la matière";
+  renderLinksPage(modId);
 }
 
 // ===================== RENDER: DASHBOARD =====================
@@ -760,7 +1027,7 @@ function renderDashboard(){
           <div class="coef-tag">Coef ${mod.coef}</div>
         </div>
         <h3>${mod.name}</h3>
-        <div class="meta">${mod.chapters.length} chapitres · ${mod.duration}</div>
+        <div class="meta">${p.total} chapitres · ${mod.duration}</div>
         <div class="pctline"><span>Progression</span><b>${p.pct}%</b></div>
         <div class="bar"><div style="width:${p.pct}%; background:${mod.color}"></div></div>
       </div>
@@ -793,7 +1060,7 @@ function renderDashboard(){
     <div class="section-title">Examen national — 2ème Bac (coef. total ${NATIONAL_COEF})</div>
     <div class="module-grid">${nationalMods.map(cardHTML).join("")}</div>
 
-    <div class="section-title">Examen régional — matières 1ère Bac (coef. total ${REGIONAL_COEF})</div>
+    <div class="section-title">Examen régional — matières du Bac Libre (coef. total ${REGIONAL_COEF})</div>
     <div class="module-grid">${regionalMods.map(cardHTML).join("")}</div>
   `;
 }
@@ -810,7 +1077,7 @@ function renderModules(){
           <div class="coef-tag">Coef ${mod.coef}</div>
         </div>
         <h3>${mod.name}</h3>
-        <div class="meta">${mod.chapters.length} chapitres · ${mod.duration}</div>
+        <div class="meta">${p.total} chapitres · ${mod.duration}</div>
         <div class="pctline"><span>${p.done}/${p.total} chapitres</span><b>${p.pct}%</b></div>
         <div class="bar"><div style="width:${p.pct}%; background:${mod.color}"></div></div>
       </div>
@@ -821,7 +1088,7 @@ function renderModules(){
   el.innerHTML = `
     <div class="section-title">Examen national — 2ème Bac</div>
     <div class="module-grid">${nationalMods.map(cardHTML).join("")}</div>
-    <div class="section-title">Examen régional — matières 1ère Bac</div>
+    <div class="section-title">Examen régional — matières du Bac Libre</div>
     <div class="module-grid">${regionalMods.map(cardHTML).join("")}</div>
   `;
 }
@@ -830,10 +1097,19 @@ function renderModules(){
 function renderModuleDetail(modId){
   const mod = CURRICULUM.find(m => m.id === modId);
   const p = moduleProgress(mod);
+  const list = getModuleChapters(mod);
   const el = document.getElementById("view-detail");
 
-  let chaptersHTML = mod.chapters.map((title, idx) => {
+  let chaptersHTML = list.map((c) => {
+    const idx = c.origIdx;
+    const title = c.title;
     const data = getChapterData(modId, idx);
+    const isCustom = typeof idx === "string" && idx.startsWith("custom:");
+
+    const confDots = [1,2,3,4,5].map(n =>
+      `<div class="conf-dot ${data.confidence>=n ? 'active-'+data.confidence : ''}" onclick="setConfidence('${modId}','${idx}',${n})">${n}</div>`
+    ).join("");
+
     const resHTML = (data.resources||[]).map((r, ri) => {
       const tagClass = {pdf:"tag-pdf", video:"tag-video", playlist:"tag-playlist", link:"tag-link"}[r.type] || "tag-link";
       const icon = {pdf:"📄", video:"▶", playlist:"▶▶", link:"🔗"}[r.type] || "🔗";
@@ -842,7 +1118,7 @@ function renderModuleDetail(modId){
           <span class="res-ic">${icon}</span>
           <a href="${escapeAttr(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.label || r.url)}</a>
           <span class="tag ${tagClass}">${r.type}</span>
-          <span class="rm" onclick="removeResource('${modId}',${idx},${ri})">✕</span>
+          <span class="rm" onclick="removeResource('${modId}','${idx}',${ri})">✕</span>
         </div>
       `;
     }).join("");
@@ -850,13 +1126,21 @@ function renderModuleDetail(modId){
     return `
       <div class="chapter-card ${data.done ? 'done' : ''}" id="chap-${modId}-${idx}">
         <div class="chapter-top">
-          <div class="chk ${data.done ? 'checked' : ''}" onclick="toggleChapter('${modId}',${idx})">${data.done ? '✓' : ''}</div>
-          <div class="chapter-title ${data.done ? 'done' : ''}">
-            <span class="chapter-num">${idx+1}.</span>${escapeHtml(title)}
+          <div class="chk ${data.done ? 'checked' : ''}" onclick="toggleChapter('${modId}','${idx}')">${data.done ? '✓' : ''}</div>
+          <div class="chapter-title ${data.done ? 'done' : ''}" id="chaptitle-${modId}-${idx}">
+            <span class="chapter-num">${isCustom ? '+' : ''}</span>${escapeHtml(title)}
           </div>
-          <div class="expand-btn" onclick="toggleExpand('${modId}',${idx})" id="expbtn-${modId}-${idx}">+ ressources</div>
+          <div class="chapter-actions">
+            <span class="icon-btn" onclick="startEditChapter('${modId}','${idx}')" title="Modifier le titre">✎</span>
+            <span class="icon-btn danger" onclick="deleteChapter('${modId}','${idx}')" title="Supprimer ce chapitre">🗑</span>
+            <span class="expand-btn" onclick="toggleExpand('${modId}','${idx}')" id="expbtn-${modId}-${idx}">+ détails</span>
+          </div>
         </div>
         <div class="chapter-body" id="chapbody-${modId}-${idx}">
+          <div class="confidence-row">
+            <span class="lbl">Niveau de maîtrise :</span>
+            ${confDots}
+          </div>
           <div class="res-row">
             <select id="restype-${modId}-${idx}">
               <option value="pdf">PDF</option>
@@ -866,11 +1150,11 @@ function renderModuleDetail(modId){
             </select>
             <input type="text" id="reslabel-${modId}-${idx}" placeholder="Nom (ex: Cours AlloSchool)">
             <input type="text" id="resurl-${modId}-${idx}" placeholder="https://...">
-            <button class="add-btn" onclick="addResource('${modId}',${idx})">+ Ajouter</button>
+            <button class="add-btn" onclick="addResource('${modId}','${idx}')">+ Ajouter</button>
           </div>
           <div class="res-list" id="reslist-${modId}-${idx}">${resHTML || '<div style="font-size:12.5px;color:var(--ink-soft);padding:4px 0;">Aucune ressource encore — ajoute un lien PDF, une vidéo ou une playlist.</div>'}</div>
           <div class="notes-box">
-            <textarea placeholder="Notes personnelles sur ce chapitre..." id="notes-${modId}-${idx}" onblur="saveNotes('${modId}',${idx})">${escapeHtml(data.notes||"")}</textarea>
+            <textarea placeholder="Notes personnelles sur ce chapitre..." id="notes-${modId}-${idx}" onblur="saveNotes('${modId}','${idx}')">${escapeHtml(data.notes||"")}</textarea>
           </div>
         </div>
       </div>
@@ -880,14 +1164,20 @@ function renderModuleDetail(modId){
   el.innerHTML = `
     <div class="back-link" onclick="goView('modules')">← Retour aux modules</div>
     <div class="module-header">
-      <div class="icon-badge-lg" style="background:${mod.color}">${mod.icon}</div>
-      <div>
-        <h2>${mod.name}</h2>
-        <div class="meta-line">${mod.block === 'national' ? 'Examen national' : 'Examen régional'} · Coefficient ${mod.coef} · Épreuve de ${mod.duration} · ${p.done}/${p.total} chapitres maîtrisés (${p.pct}%)</div>
+      <div class="module-header-left">
+        <div class="icon-badge-lg" style="background:${mod.color}">${mod.icon}</div>
+        <div>
+          <h2>${mod.name}</h2>
+          <div class="meta-line">${mod.block === 'national' ? 'Examen national' : 'Examen régional'} · Coefficient ${mod.coef} · Épreuve de ${mod.duration} · ${p.done}/${p.total} chapitres maîtrisés (${p.pct}%)</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="add-btn" onclick="openModuleLinks('${modId}')">🔗 Liens de la matière</button>
+        <button class="add-btn" onclick="addNewChapter('${modId}')">+ Nouveau chapitre</button>
       </div>
     </div>
     <div class="bar" style="margin-bottom:22px;"><div style="width:${p.pct}%; background:${mod.color}; height:9px;"></div></div>
-    ${chaptersHTML}
+    ${chaptersHTML || '<div class="empty-state"><div class="big">📭</div>Aucun chapitre. Ajoute-en un avec le bouton ci-dessus.</div>'}
   `;
 }
 
@@ -895,15 +1185,26 @@ function toggleExpand(modId, idx){
   const body = document.getElementById(`chapbody-${modId}-${idx}`);
   const btn = document.getElementById(`expbtn-${modId}-${idx}`);
   const open = body.classList.toggle("open");
-  btn.textContent = open ? "− masquer" : "+ ressources";
+  btn.textContent = open ? "− masquer" : "+ détails";
 }
 
 function toggleChapter(modId, idx){
   const data = getChapterData(modId, idx);
   data.done = !data.done;
+  if(data.done) data.lastReviewed = Date.now();
   saveState();
   renderModuleDetail(modId);
   renderSidebarProgress();
+}
+
+function setConfidence(modId, idx, n){
+  const data = getChapterData(modId, idx);
+  data.confidence = data.confidence === n ? 0 : n;
+  data.lastReviewed = Date.now();
+  saveState();
+  renderModuleDetail(modId);
+  document.getElementById(`chapbody-${modId}-${idx}`).classList.add("open");
+  document.getElementById(`expbtn-${modId}-${idx}`).textContent = "− masquer";
 }
 
 function addResource(modId, idx){
@@ -918,7 +1219,6 @@ function addResource(modId, idx){
   data.resources.push({ type, label: label || finalUrl, url: finalUrl });
   saveState();
   renderModuleDetail(modId);
-  // re-open the chapter we just edited
   document.getElementById(`chapbody-${modId}-${idx}`).classList.add("open");
   document.getElementById(`expbtn-${modId}-${idx}`).textContent = "− masquer";
   showToast("Ressource ajoutée ✓");
@@ -939,51 +1239,605 @@ function saveNotes(modId, idx){
   saveState();
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// ----- Edit / delete / add chapters -----
+function startEditChapter(modId, idx){
+  const titleEl = document.getElementById(`chaptitle-${modId}-${idx}`);
+  const mod = CURRICULUM.find(m => m.id === modId);
+  const list = getModuleChapters(mod);
+  const current = list.find(c => String(c.origIdx) === String(idx));
+  const currentTitle = current ? current.title : "";
+  titleEl.innerHTML = `
+    <div class="edit-chapter-row">
+      <input type="text" id="editinput-${modId}-${idx}" value="${escapeAttr(currentTitle)}">
+      <button class="add-btn" onclick="saveEditChapter('${modId}','${idx}')">✓ Valider</button>
+    </div>
+  `;
+  document.getElementById(`editinput-${modId}-${idx}`).focus();
 }
-function escapeAttr(s){ return escapeHtml(s); }
 
-// ===================== RENDER: SIDEBAR MINI PROGRESS =====================
+function saveEditChapter(modId, idx){
+  const newTitle = document.getElementById(`editinput-${modId}-${idx}`).value.trim();
+  if(!newTitle){ showToast("Le titre ne peut pas être vide."); return; }
+
+  if(typeof idx === "string" && idx.startsWith("custom:")){
+    const ci = parseInt(idx.split(":")[1]);
+    STATE.customChapters[modId][ci] = newTitle;
+  } else {
+    // persist override — getModuleChapters() reads this back on every render/reload
+    getChapterData(modId, idx).title = newTitle;
+  }
+  saveState();
+  renderModuleDetail(modId);
+  showToast("Chapitre modifié ✓");
+}
+
+function deleteChapter(modId, idx){
+  if(!confirm("Supprimer ce chapitre ? Ses ressources et notes seront aussi supprimées.")) return;
+  if(typeof idx === "string" && idx.startsWith("custom:")){
+    const ci = parseInt(idx.split(":")[1]);
+    STATE.customChapters[modId].splice(ci, 1);
+  } else {
+    if(!STATE.deletedChapters[modId]) STATE.deletedChapters[modId] = [];
+    STATE.deletedChapters[modId].push(idx);
+    delete STATE.chapters[chapterKey(modId, idx)];
+  }
+  saveState();
+  renderModuleDetail(modId);
+  showToast("Chapitre supprimé.");
+}
+
+function addNewChapter(modId){
+  if(!STATE.customChapters[modId]) STATE.customChapters[modId] = [];
+  STATE.customChapters[modId].push("Nouveau chapitre — clique sur ✎ pour renommer");
+  saveState();
+  renderModuleDetail(modId);
+  showToast("Chapitre ajouté — modifie son titre.");
+}
+
+// ===================== RENDER: MODULE LINKS PAGE =====================
+function renderLinksPage(modId){
+  const mod = CURRICULUM.find(m => m.id === modId);
+  const links = STATE.moduleLinks[modId] || [];
+  const el = document.getElementById("view-links");
+
+  const linksHTML = links.map((l, i) => `
+    <div class="link-card">
+      <span class="ic">🔗</span>
+      <div style="flex:1;">
+        <a href="${escapeAttr(l.url)}" target="_blank" rel="noopener">${escapeHtml(l.label || l.url)}</a>
+        ${l.desc ? `<div class="desc">${escapeHtml(l.desc)}</div>` : ""}
+      </div>
+      <span class="rm" onclick="removeModuleLink('${modId}',${i})" style="cursor:pointer; color:var(--ink-soft);">✕</span>
+    </div>
+  `).join("") || `<div class="empty-state"><div class="big">🔗</div>Aucun lien encore pour ${escapeHtml(mod.name)}. Ajoute des sites entiers utiles pour toute la matière (pas un chapitre précis).</div>`;
+
+  el.innerHTML = `
+    <div class="back-link" onclick="openModuleDetail('${modId}')">← Retour à ${escapeHtml(mod.name)}</div>
+    <div class="drive-card">
+      <h3>Ajouter un lien général pour ${escapeHtml(mod.name)}</h3>
+      <p>Pour des sites entiers (ex: la page AlloSchool de la matière, un site d'exercices) plutôt qu'une ressource liée à un seul chapitre.</p>
+      <div class="res-row">
+        <input type="text" id="modlinklabel-${modId}" placeholder="Nom (ex: AlloSchool - Physique Chimie)">
+        <input type="text" id="modlinkdesc-${modId}" placeholder="Description (optionnel)">
+      </div>
+      <div class="res-row">
+        <input type="text" id="modlinkurl-${modId}" placeholder="https://...">
+        <button class="add-btn" onclick="addModuleLink('${modId}')">+ Ajouter le lien</button>
+      </div>
+    </div>
+    <div class="section-title">Liens enregistrés</div>
+    ${linksHTML}
+  `;
+}
+
+function addModuleLink(modId){
+  const label = document.getElementById(`modlinklabel-${modId}`).value.trim();
+  const desc = document.getElementById(`modlinkdesc-${modId}`).value.trim();
+  const url = document.getElementById(`modlinkurl-${modId}`).value.trim();
+  if(!url){ showToast("Ajoute un lien."); return; }
+  const finalUrl = /^https?:\/\//i.test(url) ? url : "https://" + url;
+  if(!STATE.moduleLinks[modId]) STATE.moduleLinks[modId] = [];
+  STATE.moduleLinks[modId].push({ label: label || finalUrl, desc, url: finalUrl });
+  saveState();
+  renderLinksPage(modId);
+  showToast("Lien ajouté ✓");
+}
+
+function removeModuleLink(modId, i){
+  STATE.moduleLinks[modId].splice(i, 1);
+  saveState();
+  renderLinksPage(modId);
+}
+
+// ===================== SIDEBAR MINI PROGRESS =====================
 function renderSidebarProgress(){
   const g = globalProgress();
   document.getElementById("sidebarPct").textContent = g.pct + "%";
   document.getElementById("sidebarBar").style.width = g.pct + "%";
 }
 
-// ===================== AI CHAT (Gemini) =====================
-function renderAI(){
-  const el = document.getElementById("view-ai");
+// ===================== FLASHCARDS =====================
+let flashDeck = [];
+let flashIndex = 0;
+let flashFlipped = false;
+let flashSelectedModule = "all";
+
+function buildFlashDeck(moduleFilter){
+  let deck = [];
+  CURRICULUM.forEach(mod => {
+    if(moduleFilter !== "all" && mod.id !== moduleFilter) return;
+    const list = getModuleChapters(mod);
+    list.forEach(c => {
+      const data = getChapterData(mod.id, c.origIdx);
+      deck.push({
+        modName: mod.name,
+        modColor: mod.color,
+        front: c.title,
+        back: data.notes && data.notes.trim() ? data.notes.trim() : "Pas encore de notes pour ce chapitre — ajoute-en depuis la page du module pour enrichir cette carte.",
+        modId: mod.id,
+        idx: c.origIdx
+      });
+    });
+  });
+  // shuffle
+  for(let i = deck.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [deck[i],deck[j]] = [deck[j],deck[i]];
+  }
+  return deck;
+}
+
+function renderFlashcardsHome(){
+  const el = document.getElementById("view-flashcards");
+  const options = CURRICULUM.map(m => `<option value="${m.id}">${escapeHtml(m.name)}</option>`).join("");
+  el.innerHTML = `
+    <div class="flash-controls">
+      <span style="font-size:13px; color:var(--ink-soft);">Matière :</span>
+      <select id="flashModuleSelect" onchange="startFlashSession()">
+        <option value="all">Toutes les matières</option>
+        ${options}
+      </select>
+      <button class="add-btn" onclick="startFlashSession()">↻ Nouvelle session</button>
+    </div>
+    <div id="flashStage"></div>
+  `;
+  startFlashSession();
+}
+
+function startFlashSession(){
+  const sel = document.getElementById("flashModuleSelect");
+  flashSelectedModule = sel ? sel.value : "all";
+  flashDeck = buildFlashDeck(flashSelectedModule);
+  flashIndex = 0;
+  flashFlipped = false;
+  renderFlashStage();
+}
+
+function renderFlashStage(){
+  const stage = document.getElementById("flashStage");
+  if(flashDeck.length === 0){
+    stage.innerHTML = `<div class="empty-state"><div class="big">▢</div>Aucun chapitre à réviser pour cette sélection.</div>`;
+    return;
+  }
+  const card = flashDeck[flashIndex];
+  stage.innerHTML = `
+    <div class="flashcard" onclick="flipFlashcard()">
+      <span class="face-label" style="color:${card.modColor}">${escapeHtml(card.modName)} · ${flashFlipped ? 'réponse / notes' : 'chapitre'}</span>
+      ${flashFlipped ? escapeHtml(card.back) : escapeHtml(card.front)}
+    </div>
+    <div class="flash-nav">
+      <button onclick="prevFlashcard()">← Précédent</button>
+      <button onclick="flipFlashcard()">⟲ Retourner</button>
+      <button onclick="nextFlashcard()">Suivant →</button>
+    </div>
+    <div class="flash-progress">Carte ${flashIndex+1} / ${flashDeck.length}</div>
+    ${flashFlipped ? `
+      <div class="flash-rate-row">
+        <span style="font-size:12px; color:var(--ink-soft); align-self:center;">Comment c'était ?</span>
+        <button style="background:#fde3df; color:#a4503f;" onclick="rateFlashcard(1)">Difficile</button>
+        <button style="background:#fdf3df; color:#a47a3f;" onclick="rateFlashcard(3)">Moyen</button>
+        <button style="background:#e3eee3; color:#3f6b3f;" onclick="rateFlashcard(5)">Facile</button>
+      </div>
+    ` : ""}
+  `;
+}
+
+function flipFlashcard(){
+  flashFlipped = !flashFlipped;
+  renderFlashStage();
+}
+function nextFlashcard(){
+  flashIndex = (flashIndex + 1) % flashDeck.length;
+  flashFlipped = false;
+  renderFlashStage();
+}
+function prevFlashcard(){
+  flashIndex = (flashIndex - 1 + flashDeck.length) % flashDeck.length;
+  flashFlipped = false;
+  renderFlashStage();
+}
+function rateFlashcard(score){
+  const card = flashDeck[flashIndex];
+  const data = getChapterData(card.modId, card.idx);
+  data.confidence = score;
+  data.lastReviewed = Date.now();
+  saveState();
+  nextFlashcard();
+}
+
+// ===================== POMODORO =====================
+let pomoState = {
+  running: false,
+  mode: "work", // work | break
+  secondsLeft: 25*60,
+  workMin: 25,
+  breakMin: 5,
+  moduleId: "",
+  intervalId: null
+};
+
+function renderPomodoro(){
+  const el = document.getElementById("view-pomodoro");
+  const options = CURRICULUM.map(m => `<option value="${m.id}">${escapeHtml(m.name)}</option>`).join("");
+  const todayLog = STATE.pomodoroLog.filter(s => isToday(s.date));
+  const totalTodayMin = todayLog.reduce((sum,s) => sum + s.minutes, 0);
+
+  const logHTML = STATE.pomodoroLog.slice().reverse().slice(0, 12).map(s => `
+    <div class="session-log-item">
+      <span class="mod-name">${escapeHtml(s.moduleName)}</span>
+      <span class="dur">${s.minutes} min · ${new Date(s.date).toLocaleDateString('fr-FR', {day:'numeric', month:'short'})}</span>
+    </div>
+  `).join("") || `<div style="font-size:13px; color:var(--ink-soft);">Aucune session enregistrée encore.</div>`;
+
+  el.innerHTML = `
+    <div class="pomo-card">
+      <div class="pomo-mode" id="pomoModeLabel">${pomoState.mode === 'work' ? 'Concentration' : 'Pause'}</div>
+      <div class="pomo-time" id="pomoTimeDisplay">${formatPomoTime(pomoState.secondsLeft)}</div>
+      <select id="pomoModuleSelect" style="width:100%;">
+        <option value="">— Matière (optionnel) —</option>
+        ${options}
+      </select>
+      <div class="pomo-select">
+        <select id="pomoWorkLen" onchange="updatePomoLengths()">
+          ${[15,25,30,45,50].map(n => `<option value="${n}" ${n===pomoState.workMin?'selected':''}>${n} min travail</option>`).join("")}
+        </select>
+        <select id="pomoBreakLen" onchange="updatePomoLengths()">
+          ${[5,10,15].map(n => `<option value="${n}" ${n===pomoState.breakMin?'selected':''}>${n} min pause</option>`).join("")}
+        </select>
+      </div>
+      <div class="pomo-controls">
+        <button onclick="pomoStartPause()" id="pomoStartBtn">${pomoState.running ? '⏸ Pause' : '▶ Démarrer'}</button>
+        <button class="secondary" onclick="pomoReset()">↻ Réinitialiser</button>
+      </div>
+    </div>
+
+    <div class="stat-card" style="max-width:380px; margin:0 auto 24px;">
+      <div class="num">${totalTodayMin} min</div>
+      <div class="lbl">Temps d'étude aujourd'hui</div>
+    </div>
+
+    <div class="section-title">Sessions récentes</div>
+    <div style="max-width:480px; margin:0 auto;">${logHTML}</div>
+  `;
+}
+
+function isToday(ts){
+  const d = new Date(ts), now = new Date();
+  return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth() && d.getDate()===now.getDate();
+}
+
+function formatPomoTime(sec){
+  const m = Math.floor(sec/60).toString().padStart(2,"0");
+  const s = (sec%60).toString().padStart(2,"0");
+  return `${m}:${s}`;
+}
+
+function updatePomoLengths(){
+  pomoState.workMin = parseInt(document.getElementById("pomoWorkLen").value);
+  pomoState.breakMin = parseInt(document.getElementById("pomoBreakLen").value);
+  if(!pomoState.running){
+    pomoState.secondsLeft = (pomoState.mode === "work" ? pomoState.workMin : pomoState.breakMin) * 60;
+    document.getElementById("pomoTimeDisplay").textContent = formatPomoTime(pomoState.secondsLeft);
+  }
+}
+
+function pomoStartPause(){
+  if(pomoState.running){
+    clearInterval(pomoState.intervalId);
+    pomoState.running = false;
+  } else {
+    pomoState.running = true;
+    pomoState.intervalId = setInterval(pomoTick, 1000);
+  }
+  document.getElementById("pomoStartBtn").textContent = pomoState.running ? "⏸ Pause" : "▶ Démarrer";
+}
+
+function pomoTick(){
+  pomoState.secondsLeft--;
+  if(pomoState.secondsLeft <= 0){
+    if(pomoState.mode === "work"){
+      // log the completed work session
+      const sel = document.getElementById("pomoModuleSelect");
+      const modId = sel ? sel.value : "";
+      const mod = CURRICULUM.find(m => m.id === modId);
+      STATE.pomodoroLog.push({
+        moduleId: modId || null,
+        moduleName: mod ? mod.name : "Sans matière",
+        minutes: pomoState.workMin,
+        date: Date.now()
+      });
+      saveState();
+      pomoState.mode = "break";
+      pomoState.secondsLeft = pomoState.breakMin * 60;
+      showToast("Session terminée ! Pause méritée ☕");
+    } else {
+      pomoState.mode = "work";
+      pomoState.secondsLeft = pomoState.workMin * 60;
+      showToast("Pause finie — retour au travail 💪");
+    }
+  }
+  const display = document.getElementById("pomoTimeDisplay");
+  const label = document.getElementById("pomoModeLabel");
+  if(display){
+    display.textContent = formatPomoTime(pomoState.secondsLeft);
+    label.textContent = pomoState.mode === "work" ? "Concentration" : "Pause";
+  } else {
+    // view changed — stop ticking quietly, re-render will be needed
+  }
+  if(pomoState.secondsLeft === (pomoState.mode==="work"?pomoState.workMin:pomoState.breakMin)*60 - 0){
+    // session boundary — refresh the log/today widgets if still on this view
+    if(document.getElementById("view-pomodoro").classList.contains("active")) renderPomodoro();
+  }
+}
+
+function pomoReset(){
+  clearInterval(pomoState.intervalId);
+  pomoState.running = false;
+  pomoState.mode = "work";
+  pomoState.secondsLeft = pomoState.workMin * 60;
+  renderPomodoro();
+}
+
+// ===================== WEEKLY REVIEW PLANNER =====================
+function renderPlanner(){
+  const el = document.getElementById("view-planner");
+  const now = Date.now();
+  const DAY = 86400000;
+  let items = [];
+
+  CURRICULUM.forEach(mod => {
+    const list = getModuleChapters(mod);
+    list.forEach(c => {
+      const data = getChapterData(mod.id, c.origIdx);
+      if(!data.done) return; // only review chapters already studied at least once
+      const last = data.lastReviewed || 0;
+      const daysSince = Math.floor((now - last) / DAY);
+      if(daysSince >= 5){
+        items.push({ modName: mod.name, modColor: mod.color, modId: mod.id, idx: c.origIdx, title: c.title, daysSince, confidence: data.confidence });
+      }
+    });
+  });
+
+  // prioritize: longest untouched first, then lowest confidence
+  items.sort((a,b) => {
+    if(b.daysSince !== a.daysSince) return b.daysSince - a.daysSince;
+    return (a.confidence||0) - (b.confidence||0);
+  });
+
+  const itemsHTML = items.slice(0, 25).map(it => {
+    const urgency = it.daysSince > 14 ? "#c97a6b" : it.daysSince > 8 ? "#d9a85e" : "#9bbf7e";
+    return `
+      <div class="stale-item">
+        <div class="badge" style="background:${urgency}"></div>
+        <div class="info">
+          <div class="ch">${escapeHtml(it.title)}</div>
+          <div class="mod">${escapeHtml(it.modName)}${it.confidence ? ' · confiance ' + it.confidence + '/5' : ''}</div>
+        </div>
+        <div class="days">${it.daysSince}j sans révision</div>
+        <button class="add-btn" onclick="openModuleDetail('${it.modId}')">Revoir</button>
+      </div>
+    `;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="drive-card">
+      <h3>Comment ça marche</h3>
+      <p>Cette page repère les chapitres que tu as déjà cochés "terminés" mais que tu n'as pas revus (coché une confiance ou ouvert) depuis 5 jours ou plus. Plus c'est rouge, plus ça urge.</p>
+    </div>
+    <div class="section-title">À revoir en priorité (${items.length})</div>
+    ${itemsHTML || `<div class="empty-state"><div class="big">✓</div>Rien à revoir pour le moment — soit tu n'as encore rien terminé, soit tout est frais dans ta tête !</div>`}
+  `;
+}
+
+// ===================== CONCOURS MÉDECINE =====================
+let currentMedSubject = null;
+
+function medSubjectProgress(subj){
+  const total = subj.chapters.length;
+  let done = 0;
+  subj.chapters.forEach((_, idx) => {
+    if(getMedChapterData(subj.id, idx).done) done++;
+  });
+  return { done, total, pct: total ? Math.round((done/total)*100) : 0 };
+}
+
+function renderMedecineHome(){
+  const el = document.getElementById("view-medecine");
+  const subjects = CONCOURS_MEDECINE.writtenExam.subjects;
+  let totalDone=0, totalAll=0;
+  subjects.forEach(s => { const p = medSubjectProgress(s); totalDone += p.done; totalAll += p.total; });
+  const overallPct = totalAll ? Math.round((totalDone/totalAll)*100) : 0;
+
+  const cardsHTML = subjects.map(s => {
+    const p = medSubjectProgress(s);
+    return `
+      <div class="module-card" onclick="openMedSubject('${s.id}')">
+        <div class="top-row">
+          <div class="icon-badge" style="background:${s.color}">${s.icon}</div>
+          <div class="coef-tag">Coef ${s.coef}</div>
+        </div>
+        <h3>${s.name}</h3>
+        <div class="meta">${p.total} thèmes de révision</div>
+        <div class="pctline"><span>${p.done}/${p.total}</span><b>${p.pct}%</b></div>
+        <div class="bar"><div style="width:${p.pct}%; background:${s.color}"></div></div>
+      </div>
+    `;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="medecine-banner">
+      <h2>Concours Commun Médecine, Pharmacie, Médecine Dentaire</h2>
+      <p>Épreuve écrite : ${CONCOURS_MEDECINE.writtenExam.duration} · 56 questions QCU (4 matières × 14) · note éliminatoire si &lt; ${CONCOURS_MEDECINE.writtenExam.eliminatoryThreshold}/20 dans une matière. Le programme correspond à celui de la 2ème année Bac — donc chaque heure passée sur tes modules du Bac sert aussi ici.</p>
+      <div class="medecine-formula">${CONCOURS_MEDECINE.presection.formula}</div>
+    </div>
+
+    <div class="grid-stats" style="grid-template-columns:repeat(2,1fr); max-width:480px;">
+      <div class="stat-card">
+        <div class="num">${overallPct}%</div>
+        <div class="lbl">Préparation concours globale</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">56</div>
+        <div class="lbl">Questions le jour J (14 × 4 matières)</div>
+      </div>
+    </div>
+
+    <div class="section-title">Matières du concours</div>
+    <div class="module-grid">${cardsHTML}</div>
+  `;
+}
+
+function openMedSubject(subjId){
+  currentMedSubject = subjId;
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-medecine-detail").classList.add("active");
+  document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+  document.querySelector('.navbtn[data-view="medecine"]').classList.add("active");
+  const subj = CONCOURS_MEDECINE.writtenExam.subjects.find(s => s.id === subjId);
+  document.getElementById("pageTitle").textContent = "Concours — " + subj.name;
+  document.getElementById("pageSub").textContent = "Coefficient " + subj.coef + " · 14 questions le jour J";
+  renderMedSubjectDetail(subjId);
+}
+
+function renderMedSubjectDetail(subjId){
+  const subj = CONCOURS_MEDECINE.writtenExam.subjects.find(s => s.id === subjId);
+  const p = medSubjectProgress(subj);
+  const el = document.getElementById("view-medecine-detail");
+
+  const chaptersHTML = subj.chapters.map((title, idx) => {
+    const data = getMedChapterData(subjId, idx);
+    const confDots = [1,2,3,4,5].map(n =>
+      `<div class="conf-dot ${data.confidence>=n ? 'active-'+data.confidence : ''}" onclick="setMedConfidence('${subjId}',${idx},${n})">${n}</div>`
+    ).join("");
+    return `
+      <div class="chapter-card ${data.done ? 'done' : ''}">
+        <div class="chapter-top">
+          <div class="chk ${data.done ? 'checked' : ''}" onclick="toggleMedChapter('${subjId}',${idx})">${data.done ? '✓' : ''}</div>
+          <div class="chapter-title ${data.done ? 'done' : ''}">${escapeHtml(title)}</div>
+        </div>
+        <div class="confidence-row" style="margin-top:12px;">
+          <span class="lbl">Niveau de maîtrise :</span>
+          ${confDots}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="back-link" onclick="goView('medecine')">← Retour au concours Médecine</div>
+    <div class="module-header">
+      <div class="module-header-left">
+        <div class="icon-badge-lg" style="background:${subj.color}">${subj.icon}</div>
+        <div>
+          <h2>${subj.name}</h2>
+          <div class="meta-line">${p.done}/${p.total} thèmes maîtrisés (${p.pct}%) · 14 questions le jour du concours</div>
+        </div>
+      </div>
+    </div>
+    <div class="bar" style="margin-bottom:22px;"><div style="width:${p.pct}%; background:${subj.color}; height:9px;"></div></div>
+    ${chaptersHTML}
+    <div class="drive-card" style="margin-top:20px;">
+      <p>💡 Astuce : ce concours teste le programme du Bac, donc tes ressources (PDF, vidéos) ajoutées dans le module "${subj.name === 'Sciences de la Vie (Biologie)' ? 'SVT' : subj.name}" de ton Bac fonctionnent aussi pour cette révision. Utilise les flashcards générées depuis tes modules Bac pour t'entraîner ici aussi.</p>
+    </div>
+  `;
+}
+
+function toggleMedChapter(subjId, idx){
+  const data = getMedChapterData(subjId, idx);
+  data.done = !data.done;
+  saveState();
+  renderMedSubjectDetail(subjId);
+}
+function setMedConfidence(subjId, idx, n){
+  const data = getMedChapterData(subjId, idx);
+  data.confidence = data.confidence === n ? 0 : n;
+  saveState();
+  renderMedSubjectDetail(subjId);
+}
+
+// ===================== FLOATING AI CHAT (Gemini) =====================
+let pendingImageBase64 = null;
+let pendingImageMime = null;
+
+function toggleChatWindow(){
+  const win = document.getElementById("chatWindow");
+  const isOpen = win.classList.toggle("open");
+  if(isOpen) renderChatBody();
+}
+
+function openGeminiSettings(){
+  STATE.geminiKey = ""; // force re-entry flow but keep history
+  saveState();
+  renderChatBody();
+}
+
+function renderChatBody(){
+  const body = document.getElementById("chatBody");
+  const sub = document.getElementById("chatHeaderSub");
+
   if(!STATE.geminiKey){
-    el.innerHTML = `
-      <div class="gemini-setup">
-        <h3>Connecte ton assistant Gemini</h3>
-        <p>Pour avoir une IA disponible 24/7 sans aucune limite de tokens côté plateforme, branche ta propre clé API Gemini (gratuite). Elle reste stockée uniquement dans ton navigateur — jamais envoyée ailleurs.</p>
-        <input type="password" id="geminiKeyInput" placeholder="Colle ta clé API Gemini ici (AIza...)">
-        <button class="save-btn" onclick="saveGeminiKey()">Connecter Gemini</button>
-        <div class="hint">Pas de clé ? Récupère-en une gratuitement sur <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a> avec ton compte Google, puis colle-la ici.</div>
+    sub.textContent = "Non connecté";
+    body.innerHTML = `
+      <div style="padding:18px; overflow-y:auto;">
+        <div class="gemini-setup" style="margin:0; box-shadow:none; border:none; padding:0;">
+          <h3>Connecte Gemini</h3>
+          <p>Colle ta clé API Gemini (gratuite, personnelle). Elle reste uniquement dans ton navigateur.</p>
+          <input type="password" id="geminiKeyInput" placeholder="Colle ta clé API ici (AIza...)">
+          <button class="save-btn" onclick="saveGeminiKey()">Connecter</button>
+          <div class="hint">Pas de clé ? <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></div>
+        </div>
       </div>
     `;
     return;
   }
 
-  el.innerHTML = `
-    <div id="chatPanel" style="border:1px solid var(--line); border-radius:14px; background:#fff; box-shadow:var(--shadow); overflow:hidden; height:70vh;">
-      <div id="chatHeader">
-        <div>
-          <strong style="font-size:14px;">Assistant Gemini</strong>
-          <div style="font-size:12px; color:var(--ink-soft);">Connecté avec ta clé personnelle</div>
-        </div>
-        <button class="add-btn" onclick="disconnectGemini()">Déconnecter</button>
-      </div>
-      <div id="chatMessages"></div>
-      <div id="chatInputBar">
-        <textarea id="chatInput" placeholder="Demande une explication, un exercice, une méthode..." onkeydown="handleChatKey(event)"></textarea>
-        <button id="chatSendBtn" onclick="sendChatMessage()">Envoyer</button>
-      </div>
+  sub.textContent = "Connecté · Gemini";
+  body.innerHTML = `
+    <div class="chat-shortcuts">
+      <span class="chat-shortcut-chip" onclick="useShortcut('explain')">Explique simplement</span>
+      <span class="chat-shortcut-chip" onclick="useShortcut('solve')">Résous étape par étape</span>
+      <span class="chat-shortcut-chip" onclick="useShortcut('quiz')">Teste-moi sur ce chapitre</span>
+    </div>
+    <div id="chatMessages"></div>
+    <div id="chatInputBar">
+      <button class="photo-btn" onclick="document.getElementById('chatPhotoInput').click()" title="Envoyer une photo d'exercice">📷</button>
+      <input type="file" id="chatPhotoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+      <textarea id="chatInput" placeholder="Pose ta question..." onkeydown="handleChatKey(event)"></textarea>
+      <button class="send-btn" id="chatSendBtn" onclick="sendChatMessage()">→</button>
     </div>
   `;
   renderChatMessages();
+}
+
+function useShortcut(type){
+  const input = document.getElementById("chatInput");
+  const prompts = {
+    explain: "Explique-moi ça comme si j'étais un élève du Bac, étape par étape, avec un exemple simple : ",
+    solve: "Voici un exercice. Donne-moi une solution guidée étape par étape (pas juste la réponse finale) : ",
+    quiz: "Pose-moi 3 questions pour tester ma compréhension du dernier chapitre dont on a parlé, puis corrige mes réponses."
+  };
+  input.value = prompts[type];
+  input.focus();
 }
 
 function handleChatKey(e){
@@ -998,36 +1852,55 @@ function saveGeminiKey(){
   if(!key){ showToast("Colle une clé valide."); return; }
   STATE.geminiKey = key;
   saveState();
-  renderAI();
+  renderChatBody();
   showToast("Gemini connecté ✓");
 }
 
-function disconnectGemini(){
-  STATE.geminiKey = "";
-  saveState();
-  renderAI();
+function handlePhotoUpload(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const result = e.target.result; // data:image/png;base64,XXXX
+    const [meta, base64] = result.split(",");
+    pendingImageMime = meta.match(/data:(.*);base64/)[1];
+    pendingImageBase64 = base64;
+    showToast("Photo prête — écris ta question et envoie.");
+    const input = document.getElementById("chatInput");
+    if(!input.value) input.value = "Voici un exercice, aide-moi à le résoudre étape par étape : ";
+    input.focus();
+  };
+  reader.readAsDataURL(file);
+  event.target.value = "";
 }
 
 function renderChatMessages(){
   const box = document.getElementById("chatMessages");
   if(!box) return;
   if(STATE.chatHistory.length === 0){
-    box.innerHTML = `<div class="msg sys">Pose ta première question — physique, chimie, maths, méthodologie... tout ce que tu veux, sans limite.</div>`;
+    box.innerHTML = `<div class="msg sys">Pose ta première question — ou envoie une photo d'exercice de maths/physique avec 📷.</div>`;
     return;
   }
-  box.innerHTML = STATE.chatHistory.map(m =>
-    `<div class="msg ${m.role === 'user' ? 'user' : 'ai'}">${escapeHtml(m.text)}</div>`
-  ).join("");
+  box.innerHTML = STATE.chatHistory.map(m => {
+    const imgHTML = m.imageData ? `<img class="upload-preview" src="data:${m.imageMime};base64,${m.imageData}">` : "";
+    return `<div class="msg ${m.role === 'user' ? 'user' : 'ai'}">${escapeHtml(m.text)}${imgHTML}</div>`;
+  }).join("");
   box.scrollTop = box.scrollHeight;
 }
 
 async function sendChatMessage(){
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
-  if(!text) return;
-  input.value = "";
-  STATE.chatHistory.push({ role: "user", text });
+  if(!text && !pendingImageBase64) return;
+
+  const userMsg = { role: "user", text: text || "(photo envoyée)" };
+  if(pendingImageBase64){
+    userMsg.imageData = pendingImageBase64;
+    userMsg.imageMime = pendingImageMime;
+  }
+  STATE.chatHistory.push(userMsg);
   saveState();
+  input.value = "";
   renderChatMessages();
 
   const btn = document.getElementById("chatSendBtn");
@@ -1036,11 +1909,19 @@ async function sendChatMessage(){
   box.insertAdjacentHTML("beforeend", `<div class="msg ai" id="loadingMsg">···</div>`);
   box.scrollTop = box.scrollHeight;
 
+  const imgToSend = pendingImageBase64;
+  const imgMimeToSend = pendingImageMime;
+  pendingImageBase64 = null;
+  pendingImageMime = null;
+
   try{
-    const contents = STATE.chatHistory.map(m => ({
-      role: m.role === "user" ? "user" : "model",
-      parts: [{ text: m.text }]
-    }));
+    const contents = STATE.chatHistory.map(m => {
+      const parts = [{ text: m.text }];
+      if(m.imageData){
+        parts.push({ inlineData: { mimeType: m.imageMime, data: m.imageData } });
+      }
+      return { role: m.role === "user" ? "user" : "model", parts };
+    });
 
     const resp = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${STATE.geminiKey}`,
@@ -1050,7 +1931,7 @@ async function sendChatMessage(){
         body: JSON.stringify({
           contents,
           systemInstruction: {
-            parts: [{ text: "Tu es un assistant pédagogique pour un élève marocain qui prépare le Bac Libre, filière Sciences Physiques. Réponds en français clair, de façon précise et pédagogique, avec des exemples si utile. Adapte-toi au programme marocain (maths, physique-chimie, SVT, philo, français, anglais)." }]
+            parts: [{ text: "Tu es un assistant pédagogique pour un élève marocain qui prépare le Bac Libre, filière Sciences Physiques, et potentiellement le concours Médecine. Réponds en français clair, pédagogique, avec des étapes numérotées pour les exercices de maths/physique/chimie. Si une image est fournie, lis l'énoncé et donne une solution guidée étape par étape plutôt que juste le résultat final." }]
           }
         })
       }
@@ -1091,7 +1972,7 @@ function renderDrive(){
       <h3>📁 Ton Google Drive</h3>
       <p>Lie le dossier Drive où tu ranges tes fichiers de révision pour y accéder en un clic depuis ici.</p>
       ${STATE.driveLink
-        ? `<div class="saved-drive-link">📁 <a href="${escapeAttr(STATE.driveLink)}" target="_blank" rel="noopener">${escapeHtml(STATE.driveLink)}</a><span class="rm" onclick="clearDriveLink()" style="margin-left:auto;">✕</span></div>`
+        ? `<div class="saved-drive-link">📁 <a href="${escapeAttr(STATE.driveLink)}" target="_blank" rel="noopener">${escapeHtml(STATE.driveLink)}</a><span class="rm" onclick="clearDriveLink()" style="margin-left:auto; cursor:pointer;">✕</span></div>`
         : `<div class="drive-link-row">
             <input type="text" id="driveLinkInput" placeholder="Lien de ton dossier Google Drive...">
             <button class="drive-btn" onclick="saveDriveLink()">Lier le dossier</button>
@@ -1101,7 +1982,7 @@ function renderDrive(){
 
     <div class="drive-card">
       <h3>⬇ File d'attente de téléchargement</h3>
-      <p>Important : je ne peux pas télécharger et déposer automatiquement des fichiers dans ton Drive en arrière-plan — cette plateforme tourne dans ton navigateur et n'a pas d'accès serveur à ton compte Google. En revanche, colle ici tous les liens PDF que tu veux traiter : ça te fait une liste organisée, et chaque clic sur "Ouvrir" t'amène directement au PDF pour que tu fasses "Fichier → Enregistrer dans Drive" ou un glisser-déposer — en 2 secondes par fichier au lieu de chercher chaque lien dans ton historique.</p>
+      <p>Je ne peux pas déposer automatiquement des fichiers dans ton Drive en arrière-plan — cette plateforme tourne dans ton navigateur, sans accès serveur à ton compte Google. Colle ici tes liens PDF pour les organiser ; clique "Ouvrir" puis enregistre toi-même dans Drive.</p>
       <div class="drive-link-row">
         <input type="text" id="queueNameInput" placeholder="Nom du fichier" style="max-width:200px;">
         <input type="text" id="queueUrlInput" placeholder="Lien du PDF...">
@@ -1146,7 +2027,7 @@ function renderSettings(){
   el.innerHTML = `
     <div class="drive-card" style="max-width:480px;">
       <h3>📅 Date de l'examen national</h3>
-      <p>La session normale 2027 n'est pas encore officiellement annoncée — basée sur le calendrier habituel (début juin), modifie-la dès que le ministère publie la date exacte.</p>
+      <p>La session 2027 n'est pas encore officiellement annoncée — modifie-la dès que le ministère publie la date exacte.</p>
       <div class="drive-link-row">
         <input type="date" id="examDateInput" value="${STATE.examDate}">
         <button class="drive-btn" onclick="saveExamDate()">Enregistrer</button>
@@ -1155,8 +2036,8 @@ function renderSettings(){
 
     <div class="drive-card" style="max-width:480px;">
       <h3>💾 Sauvegarde de tes données</h3>
-      <p>Tes données sont stockées uniquement dans ce navigateur, sur cet appareil. Si tu changes de téléphone, d'ordinateur, ou si tu effaces les données du navigateur, tout disparaît — sauf si tu as un fichier de sauvegarde. Télécharge-le régulièrement et garde-le dans ton Drive.</p>
-      <div style="display:flex; gap:10px;">
+      <p>Tes données sont stockées uniquement dans ce navigateur, sur cet appareil. Télécharge une sauvegarde régulièrement et garde-la dans ton Drive.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
         <button class="drive-btn" onclick="exportBackup()">⬇ Télécharger une sauvegarde</button>
         <button class="drive-btn secondary" onclick="document.getElementById('importFile').click()">⬆ Restaurer une sauvegarde</button>
       </div>
@@ -1165,7 +2046,7 @@ function renderSettings(){
 
     <div class="drive-card" style="max-width:480px;">
       <h3>🗑 Réinitialiser les données</h3>
-      <p>Efface toute ta progression, tes ressources et ton historique de chat sur cet appareil. Action irréversible — fais une sauvegarde avant si besoin.</p>
+      <p>Efface toute ta progression sur cet appareil. Action irréversible — fais une sauvegarde avant si besoin.</p>
       <button class="drive-btn secondary" onclick="resetAllData()">Réinitialiser tout</button>
     </div>
   `;
@@ -1197,6 +2078,7 @@ function importBackup(event){
       saveState();
       goView("dashboard");
       renderSidebarProgress();
+      applyDarkMode();
       showToast("Sauvegarde restaurée ✓");
     }catch(err){
       showToast("Fichier invalide — impossible de restaurer.");
@@ -1205,20 +2087,23 @@ function importBackup(event){
   reader.readAsText(file);
   event.target.value = "";
 }
+
 function saveExamDate(){
   const val = document.getElementById("examDateInput").value;
-  if(!val){ return; }
+  if(!val) return;
   STATE.examDate = val;
   saveState();
   renderCountdown();
   showToast("Date mise à jour ✓");
 }
+
 function resetAllData(){
   if(!confirm("Tout effacer ? Cette action est irréversible.")) return;
   STATE = structuredClone(DEFAULT_STATE);
   saveState();
   goView("dashboard");
   renderSidebarProgress();
+  applyDarkMode();
   showToast("Données réinitialisées.");
 }
 
@@ -1229,6 +2114,7 @@ function init(){
   }catch(e){
     console.warn("init load error", e);
   }
+  applyDarkMode();
   renderCountdown();
   setInterval(renderCountdown, 60000);
   renderSidebarProgress();
